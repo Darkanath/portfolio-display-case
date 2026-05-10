@@ -1,0 +1,16 @@
+[project]
+name = "persona-api"
+version = "0.1.0"
+description = "The non-CV side: storytelling, RPG scenarios, hobbies"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"

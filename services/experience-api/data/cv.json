@@ -1,0 +1,107 @@
+{
+  "profile": {
+    "name": "Tal Shterzer",
+    "tagline": "Engineering Manager & Systems Architect",
+    "summary": "17+ years of progressive engineering leadership, building and modernizing software systems across .NET, cloud-native architecture on Azure, and AI-augmented development workflows. I lead teams through complex cloud migrations and enterprise modernization, and I'm equally comfortable defining strategy at the whiteboard and shipping code in review.",
+    "location": "Israel",
+    "yearsOfExperience": 17
+  },
+  "experience": [
+    {
+      "id": "smartlinx",
+      "title": "Development Manager",
+      "company": "Roga Partners / BekTek Inc. / SmartLinx Solutions",
+      "start": "2025-01",
+      "end": null,
+      "current": true,
+      "highlights": [
+        "Lead, mentor and coach an 11-engineer squad; own hiring, performance reviews, and career development",
+        "Migrating an on-prem monolith to a distributed application on Microsoft Azure using .NET Core C# and React",
+        "Fully containerized ecosystem deployed independently on Azure Container Apps",
+        "Built CI/CD pipelines from GitHub to Azure using GitHub Actions",
+        "Architected a big-data path from Azure SQL OLTP to Snowflake OLAP via OneLake (Microsoft Fabric) and Apache Iceberg",
+        "Established ETL/ELT ingestion using Azure Data Factory",
+        "Championed adoption of AI coding agents (Claude Code, GitHub Copilot) across the development workflow"
+      ],
+      "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions"]
+    },
+    {
+      "id": "pra-group",
+      "title": "Systems Architect & Senior Developer",
+      "company": "PRA Group",
+      "start": "2011",
+      "end": "2024-12",
+      "current": false,
+      "highlights": [
+        "Led a document-retrieval platform for enterprise customer accounts with a Web API for new document types and source applications, on .NET 8.0",
+        "Designed and deployed software through Azure DevOps and GitHub",
+        "Led a B2B project for inter-company report exchange on .NET 8.0 and Azure",
+        "Modernized legacy systems by transitioning to microservices with gRPC and Protocol Buffers"
+      ],
+      "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps"]
+    },
+    {
+      "id": "secure-islands",
+      "title": "Server-Side Team Lead",
+      "company": "Secure Islands Technologies",
+      "start": "2009",
+      "end": "2011",
+      "current": false,
+      "highlights": [
+        "Owned a Data Loss Prevention (DLP) security product including BI for large organizations on Microsoft SSAS",
+        "Led a 4-engineer team in Agile/Scrum",
+        "Built the system in .NET 4.0 with WPF, WCF Services, and SQL Server 2008"
+      ],
+      "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS"]
+    },
+    {
+      "id": "ness",
+      "title": "Development Manager",
+      "company": "Ness Technologies",
+      "start": "2009",
+      "end": "2009",
+      "current": false,
+      "highlights": [
+        "Led an 8-person project for the Ministry of Housing: 4 developers, 2 analysts, 2 QA",
+        "Designed and implemented information-system solutions in .NET 3.5, BizTalk, and SQL Server"
+      ],
+      "stack": [".NET 3.5", "BizTalk", "SQL Server"]
+    },
+    {
+      "id": "anyclip",
+      "title": "Team Leader",
+      "company": "AnyClip (formerly PopTalk)",
+      "start": "2007",
+      "end": "2009",
+      "current": false,
+      "highlights": [
+        "Managed a 9-engineer team building a desktop application and website features",
+        "Drove integrations with social networks including Facebook",
+        "Built services with WPF, ASP.NET MVC, and JavaScript"
+      ],
+      "stack": ["WPF", "ASP.NET MVC", "JavaScript"]
+    }
+  ],
+  "skills": {
+    "languages": ["C#", "C++", ".NET (Framework, Core, .NET 8/10)", "TypeScript", "Python (learning)"],
+    "cloud": ["Microsoft Azure", "Azure Container Apps", "Azure Data Factory", "Microsoft Fabric"],
+    "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "MongoDB", "Cosmos DB"],
+    "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM tool-calling", "prompt engineering"],
+    "leadership": ["team building", "hiring", "performance management", "technical roadmapping", "Agile/Scrum"],
+    "practices": ["microservices", "containerization (Docker)", "CI/CD (GitHub Actions)", "PCI-DSS"]
+  },
+  "education": [
+    {
+      "institution": "The Open University of Israel",
+      "field": "Computer Science & Software Design"
+    },
+    {
+      "institution": "Amal B, Petah Tikva",
+      "field": "Software Technician Degree"
+    }
+  ],
+  "languages": [
+    {"name": "Hebrew", "level": "Native"},
+    {"name": "English", "level": "Native-level reading and writing"}
+  ]
+}

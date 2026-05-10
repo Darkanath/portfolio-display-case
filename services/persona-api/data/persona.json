@@ -1,0 +1,32 @@
+{
+  "storytelling": {
+    "headline": "I tell stories at tables, not just in standups.",
+    "body": "When I'm not running engineering teams, I'm usually running tabletop adventures. Designing scenarios is the same skill as designing software: model a system of constraints, anticipate how people will push against them, and build the affordances that make the experience land. Replace this paragraph with what you actually want to say."
+  },
+  "roleplaying": {
+    "headline": "Tabletop roleplaying — for over [N] years.",
+    "body": "Replace this with the systems you've played and run (D&D, Call of Cthulhu, your own homebrew, whatever), what draws you to the hobby, and what it's taught you about collaboration, improvisation, and reading a room. This is a placeholder to be filled in."
+  },
+  "scenarios": {
+    "headline": "Scenarios I've designed.",
+    "items": [
+      {
+        "title": "[Scenario name #1]",
+        "system": "[System]",
+        "blurb": "A two-sentence hook describing the situation, the stakes, and what makes this scenario interesting to design or play. Placeholder."
+      },
+      {
+        "title": "[Scenario name #2]",
+        "system": "[System]",
+        "blurb": "Another placeholder. Replace with a real scenario you've designed and are happy to share publicly."
+      }
+    ]
+  },
+  "reading": {
+    "headline": "What I've been reading lately.",
+    "items": [
+      {"title": "[Book title]", "author": "[Author]", "note": "Why it mattered."},
+      {"title": "[Book title]", "author": "[Author]", "note": "Why it mattered."}
+    ]
+  }
+}
