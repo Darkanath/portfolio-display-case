@@ -12,10 +12,8 @@ RUN dotnet publish ExperienceApi.csproj -c Release -o /app/publish --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
-# Run as non-root
-RUN groupadd --system --gid 1001 app \
- && useradd --system --uid 1001 --gid app app
-
+# The aspnet:10.0 image ships with a non-root 'app' user (UID/GID 1001) already.
+# We just use it; no need to create it.
 COPY --from=build --chown=app:app /app/publish ./
 
 USER app
