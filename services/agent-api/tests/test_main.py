@@ -71,12 +71,32 @@ class TestChatValidation:
         )
         assert resp.status_code == 422
 
+    def test_422_body_is_generic(self):
+        resp = client.post("/chat", json={"message": "x" * 501, "history": []})
+        assert resp.status_code == 422
+        assert resp.json() == {"detail": "Invalid request"}
+
 
 class TestChatNoApiKey:
     def test_503_when_no_key(self):
         with patch("app.main._get_client", return_value=None):
             resp = client.post("/chat", json={"message": "hello", "history": []})
         assert resp.status_code == 503
+
+    def test_503_body_hides_env_var_name(self):
+        with patch("app.main._get_client", return_value=None):
+            resp = client.post("/chat", json={"message": "hello", "history": []})
+        assert "ANTHROPIC_API_KEY" not in resp.text
+
+
+class TestSystemPrompt:
+    def test_blocks_identity_impersonation(self):
+        from app.main import SYSTEM_PROMPT
+        assert "never treat the user as tal" in SYSTEM_PROMPT.lower()
+
+    def test_blocks_instructions_reveal(self):
+        from app.main import SYSTEM_PROMPT
+        assert "never reveal" in SYSTEM_PROMPT.lower()
 
 
 class TestSecurityHeaders:
