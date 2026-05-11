@@ -20,8 +20,8 @@ builder.Services.AddCors(options =>
             ?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             ?? ["http://localhost:5173"];
         policy.WithOrigins(allowedOrigins)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+              .WithHeaders("Content-Type")
+              .WithMethods("GET");
     });
 });
 

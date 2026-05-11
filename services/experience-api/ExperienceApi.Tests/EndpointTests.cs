@@ -124,4 +124,66 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
             Assert.True(doc.TryGetProperty(category, out _), $"missing category '{category}'");
         }
     }
+
+    // --- CORS ---
+
+    [Fact]
+    public async Task Cors_AllowedOrigin_ReturnsAccessControlHeader()
+    {
+        var req = new HttpRequestMessage(HttpMethod.Get, "/experience");
+        req.Headers.Add("Origin", "http://localhost:5173");
+        var resp = await _client.SendAsync(req);
+        Assert.Equal("http://localhost:5173",
+            resp.Headers.GetValues("Access-Control-Allow-Origin").FirstOrDefault());
+    }
+
+    [Fact]
+    public async Task Cors_DisallowedOrigin_NoAccessControlHeader()
+    {
+        var req = new HttpRequestMessage(HttpMethod.Get, "/experience");
+        req.Headers.Add("Origin", "https://evil.example.com");
+        var resp = await _client.SendAsync(req);
+        Assert.False(resp.Headers.Contains("Access-Control-Allow-Origin"));
+    }
+
+    [Fact]
+    public async Task Cors_Preflight_DeleteNotAllowed()
+    {
+        // ASP.NET Core sets Access-Control-Allow-Origin when the origin is valid but
+        // omits Access-Control-Allow-Methods for disallowed methods. Browsers reject
+        // the actual request when the method is absent from that header.
+        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        req.Headers.Add("Origin", "http://localhost:5173");
+        req.Headers.Add("Access-Control-Request-Method", "DELETE");
+        var resp = await _client.SendAsync(req);
+        var allowedMethods = resp.Headers.TryGetValues("Access-Control-Allow-Methods", out var vals)
+            ? string.Join(",", vals) : string.Empty;
+        Assert.DoesNotContain("DELETE", allowedMethods, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Cors_Preflight_PostNotAllowed()
+    {
+        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        req.Headers.Add("Origin", "http://localhost:5173");
+        req.Headers.Add("Access-Control-Request-Method", "POST");
+        var resp = await _client.SendAsync(req);
+        var allowedMethods = resp.Headers.TryGetValues("Access-Control-Allow-Methods", out var vals)
+            ? string.Join(",", vals) : string.Empty;
+        Assert.DoesNotContain("POST", allowedMethods, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Cors_Preflight_GetAllowed()
+    {
+        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        req.Headers.Add("Origin", "http://localhost:5173");
+        req.Headers.Add("Access-Control-Request-Method", "GET");
+        var resp = await _client.SendAsync(req);
+        Assert.Equal("http://localhost:5173",
+            resp.Headers.GetValues("Access-Control-Allow-Origin").FirstOrDefault());
+        var allowedMethods = resp.Headers.TryGetValues("Access-Control-Allow-Methods", out var vals)
+            ? string.Join(",", vals) : string.Empty;
+        Assert.Contains("GET", allowedMethods, StringComparison.OrdinalIgnoreCase);
+    }
 }
