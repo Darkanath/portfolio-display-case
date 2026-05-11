@@ -88,3 +88,28 @@ class TestTopics:
     def test_topics_match_persona_keys(self):
         resp = client.get("/topics")
         assert set(resp.json()["topics"]) == set(PERSONA_DATA.keys())
+
+
+class TestSecurityHeaders:
+    @pytest.mark.parametrize("header,expected", [
+        ("x-content-type-options", "nosniff"),
+        ("x-frame-options", "DENY"),
+        ("referrer-policy", "strict-origin-when-cross-origin"),
+    ])
+    def test_header_present_on_all_responses(self, header, expected):
+        resp = client.get("/health")
+        assert resp.headers.get(header) == expected
+
+
+class TestCorsHeaders:
+    def test_custom_header_not_allowed_in_preflight(self):
+        resp = client.options(
+            "/persona",
+            headers={
+                "Origin": "http://localhost:5173",
+                "Access-Control-Request-Method": "GET",
+                "Access-Control-Request-Headers": "X-Custom-Header",
+            },
+        )
+        allowed = resp.headers.get("access-control-allow-headers", "")
+        assert "x-custom-header" not in allowed.lower()

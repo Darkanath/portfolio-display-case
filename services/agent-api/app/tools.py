@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 
@@ -130,7 +131,7 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
 
             if tool_name == "get_persona_topic":
                 topic = tool_input.get("topic", "all")
-                path = "/persona" if topic == "all" else f"/persona/{topic}"
+                path = "/persona" if topic == "all" else f"/persona/{quote(topic, safe='')}"
                 r = await client.get(f"{PERSONA_API_URL}{path}")
                 if r.status_code == 404:
                     return {"error": f"Topic '{topic}' not found. Call get_persona_topics to see available topics."}

@@ -125,6 +125,18 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
         }
     }
 
+    // --- Security headers ---
+
+    [Theory]
+    [InlineData("X-Content-Type-Options", "nosniff")]
+    [InlineData("X-Frame-Options", "DENY")]
+    [InlineData("Referrer-Policy", "strict-origin-when-cross-origin")]
+    public async Task SecurityHeaders_PresentOnAllResponses(string header, string expected)
+    {
+        var resp = await _client.GetAsync("/health");
+        Assert.Equal(expected, resp.Headers.GetValues(header).FirstOrDefault());
+    }
+
     // --- CORS ---
 
     [Fact]

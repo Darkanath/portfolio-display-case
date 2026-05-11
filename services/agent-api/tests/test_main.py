@@ -79,6 +79,43 @@ class TestChatNoApiKey:
         assert resp.status_code == 503
 
 
+class TestSecurityHeaders:
+    @pytest.mark.parametrize("header,expected", [
+        ("x-content-type-options", "nosniff"),
+        ("x-frame-options", "DENY"),
+        ("referrer-policy", "strict-origin-when-cross-origin"),
+    ])
+    def test_header_present_on_all_responses(self, header, expected):
+        resp = client.get("/health")
+        assert resp.headers.get(header) == expected
+
+
+class TestCorsHeaders:
+    def test_custom_header_not_allowed_in_preflight(self):
+        resp = client.options(
+            "/chat",
+            headers={
+                "Origin": "http://localhost:5173",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "X-Custom-Header",
+            },
+        )
+        allowed = resp.headers.get("access-control-allow-headers", "")
+        assert "x-custom-header" not in allowed.lower()
+
+    def test_content_type_allowed_in_preflight(self):
+        resp = client.options(
+            "/chat",
+            headers={
+                "Origin": "http://localhost:5173",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Content-Type",
+            },
+        )
+        allowed = resp.headers.get("access-control-allow-headers", "")
+        assert "content-type" in allowed.lower()
+
+
 class TestChatSuccess:
     def test_returns_reply_and_tools_used(self):
         mock_client = MagicMock()
@@ -111,3 +148,36 @@ class TestChatSuccess:
         # history (2) + new user message (1) = 3
         assert len(messages_sent) == 3
         assert messages_sent[-1]["content"] == "follow up"
+
+
+class TestToolResultTruncation:
+    def test_oversized_tool_result_is_truncated_before_llm(self):
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock
+        from app.main import TOOL_RESULT_MAX_CHARS
+
+        tool_block = SimpleNamespace(
+            type="tool_use", id="toolu_01", name="get_technical_skills", input={}
+        )
+        first_resp = SimpleNamespace(stop_reason="tool_use", content=[tool_block])
+        second_resp = _make_text_response("Skills retrieved.")
+
+        mock_llm = MagicMock()
+        mock_llm.messages.create.side_effect = [first_resp, second_resp]
+
+        oversized = {"data": "x" * (TOOL_RESULT_MAX_CHARS + 500)}
+
+        with (
+            patch("app.main._get_client", return_value=mock_llm),
+            patch("app.main.dispatch", new_callable=AsyncMock, return_value=oversized),
+        ):
+            resp = client.post("/chat", json={"message": "list skills", "history": []})
+
+        assert resp.status_code == 200
+
+        # The second model call should have received the truncated tool result
+        second_call_msgs = mock_llm.messages.create.call_args_list[1].kwargs["messages"]
+        tool_result_msg = second_call_msgs[-1]
+        assert tool_result_msg["role"] == "user"
+        fed_content = tool_result_msg["content"][0]["content"]
+        assert len(fed_content) <= TOOL_RESULT_MAX_CHARS

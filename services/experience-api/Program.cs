@@ -29,6 +29,14 @@ var app = builder.Build();
 
 app.UseCors();
 
+app.Use(async (ctx, next) =>
+{
+    ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    ctx.Response.Headers["X-Frame-Options"] = "DENY";
+    ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    await next();
+});
+
 // Load CV data once at startup. The file is baked into the image.
 var dataPath = Path.Combine(AppContext.BaseDirectory, "data", "cv.json");
 var cvJson = File.ReadAllText(dataPath);
