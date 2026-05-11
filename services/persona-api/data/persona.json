@@ -1,32 +1,66 @@
 {
-  "storytelling": {
-    "headline": "I tell stories at tables, not just in standups.",
-    "body": "When I'm not running engineering teams, I'm usually running tabletop adventures. Designing scenarios is the same skill as designing software: model a system of constraints, anticipate how people will push against them, and build the affordances that make the experience land. Replace this paragraph with what you actually want to say."
+  "boardgames": {
+    "headline": "I think in systems. Boardgames keep that honest.",
+    "body": "Away from the keyboard, you'll find me at a table with a rulebook, a pile of cardboard, and strong opinions. I've been into boardgames for years — the kind where decisions compound, trade-offs are real, and the game punishes lazy thinking. I follow the scene, back the occasional Kickstarter, and have a shelf that's run out of room more than once."
   },
-  "roleplaying": {
-    "headline": "Tabletop roleplaying — for over [N] years.",
-    "body": "Replace this with the systems you've played and run (D&D, Call of Cthulhu, your own homebrew, whatever), what draws you to the hobby, and what it's taught you about collaboration, improvisation, and reading a room. This is a placeholder to be filled in."
+  "boardgames_taste": {
+    "headline": "What I gravitate toward.",
+    "body": "Mostly strategy and Euro-style games — the ones with elegant resource loops and meaningful choices on every turn. But I also have a soft spot for games that create tension and narrative on their own, without a GM in the room. If a game makes someone groan, laugh, or slam the table, it's doing something right."
   },
-  "scenarios": {
-    "headline": "Scenarios I've designed.",
+  "shelf_highlights": {
+    "headline": "A few games worth mentioning.",
     "items": [
       {
-        "title": "[Scenario name #1]",
-        "system": "[System]",
-        "blurb": "A two-sentence hook describing the situation, the stakes, and what makes this scenario interesting to design or play. Placeholder."
+        "title": "Wyrmspan",
+        "designer": "Connie Vogelmann",
+        "note": "The spiritual successor to Wingspan, but with dragons. What wins me over is how the engine-building feels loose and expressive early on, then snaps into focus by the final round. Every tableau tells a different story."
       },
       {
-        "title": "[Scenario name #2]",
-        "system": "[System]",
-        "blurb": "Another placeholder. Replace with a real scenario you've designed and are happy to share publicly."
+        "title": "Nemesis",
+        "designer": "Adam Kwapinski",
+        "note": "A semi-cooperative survival horror game where the real threat is often the other players. The asymmetry of objectives creates paranoia that no amount of rules can fully explain — you have to live it. One of the best 'experience' games in the hobby."
+      },
+      {
+        "title": "Terraforming Mars",
+        "designer": "Jacob Fryxelius",
+        "note": "The benchmark Euro for a reason. The card variety means no two games play the same, and the tension between personal engine and shared board state is a design lesson I keep coming back to."
       }
     ]
   },
-  "reading": {
-    "headline": "What I've been reading lately.",
+  "boardgames_opinions": {
+    "headline": "A few things I actually believe.",
     "items": [
-      {"title": "[Book title]", "author": "[Author]", "note": "Why it mattered."},
-      {"title": "[Book title]", "author": "[Author]", "note": "Why it mattered."}
+      "Randomness is fine. Unmitigable randomness is lazy design.",
+      "A 90-minute game that feels tight beats a 4-hour game that meanders.",
+      "Solo modes are underrated — they're the best way to learn a system without burning a group's goodwill."
     ]
+  },
+  "roleplaying": {
+    "headline": "Over 20 years behind the GM screen.",
+    "body": "I've been running tabletop RPGs for over two decades. In that time I've shepherded campaigns through dungeon crawls, corporate heists, and hyperspace jumps — mostly from the GM's seat. There's something about building a world, populating it with problems, and then watching players find solutions you never anticipated that never gets old. It's the best kind of collaborative systems design."
+  },
+  "rpg_systems": {
+    "headline": "Systems I've spent real time with.",
+    "items": [
+      {
+        "title": "Dungeons & Dragons",
+        "role": "GM",
+        "note": "Where most people start, and for good reason. I've run everything from one-shots to multi-year campaigns. The system has its rough edges, but nothing else has the same shared language at the table."
+      },
+      {
+        "title": "Blades in the Dark / Powered by the Apocalypse",
+        "role": "GM",
+        "note": "A different philosophy entirely — fiction-first, outcome-driven, collaborative by design. Running PbtA games taught me how much scaffolding traditional systems carry that you don't actually need. Blades in particular is a masterclass in elegant constraint."
+      },
+      {
+        "title": "Star Wars: Edge of the Empire",
+        "role": "GM",
+        "note": "The narrative dice system shouldn't work as well as it does. Outcomes aren't just success or failure — they come with complications, advantages, and story beats baked in. It produces sessions that feel genuinely cinematic without trying too hard."
+      }
+    ]
+  },
+  "rpg_as_craft": {
+    "headline": "What GMing and engineering have in common.",
+    "body": "Both involve designing systems that people will interact with in ways you can't fully predict. The skill is the same: build enough structure to make the experience coherent, but leave enough space for the interesting stuff to happen. A good encounter and a good API have more in common than most people would admit."
   }
 }

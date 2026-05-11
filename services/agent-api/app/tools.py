@@ -56,9 +56,10 @@ TOOLS: list[dict[str, Any]] = [
     {
         "name": "get_persona_topic",
         "description": (
-            "Retrieve content from Tal's non-CV side: storytelling, tabletop roleplaying, "
-            "scenario design, reading, hobbies. Use this when the user asks about Tal as a "
-            "person beyond his professional work."
+            "Retrieve content from Tal's non-CV side: boardgames, boardgame taste and opinions, "
+            "shelf highlights, tabletop roleplaying, RPG systems, and the craft parallels between "
+            "GMing and engineering. Use this when the user asks about Tal as a person beyond his "
+            "professional work."
         ),
         "input_schema": {
             "type": "object",
