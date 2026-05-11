@@ -30,9 +30,9 @@
   "boardgames_opinions": {
     "headline": "A few things I actually believe.",
     "items": [
-      "Randomness is fine. Unmitigable randomness is lazy design.",
-      "A 90-minute game that feels tight beats a 4-hour game that meanders.",
-      "Solo modes are underrated — they're the best way to learn a system without burning a group's goodwill."
+      {"text": "Randomness is fine. Unmitigable randomness is lazy design."},
+      {"text": "A 90-minute game that feels tight beats a 4-hour game that meanders."},
+      {"text": "Solo modes are underrated — they're the best way to learn a system without burning a group's goodwill."}
     ]
   },
   "roleplaying": {
