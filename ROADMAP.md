@@ -25,16 +25,16 @@ Wire up the rest of the CV data:
 **Acceptance:** the page tells your full professional story without the agent,
 and looks intentional on phone and desktop.
 
-## Milestone 3 — The Ask Tal agent (1–2 days)
+## Milestone 3 — The Ask Tal agent ✅
 
 The agent service is already coded. What's left:
 
-- [ ] Set `ANTHROPIC_API_KEY` in `.env` and verify `/health` reports `agent_available: true`
-- [ ] Manually test the agent via curl (see below)
-- [ ] Build the chat UI: floating button in bottom-right, slide-out panel
-- [ ] Wire it to `POST /chat`, maintain last 10 turns of history in React state
-- [ ] Empty-state suggestions ("What does Tal do at SmartLinx?", "What kind of teams has Tal led?")
-- [ ] Show "tools used" subtly, as a transparency signal — proves the agent isn't making things up
+- [x] Set `ANTHROPIC_API_KEY` in `.env` and verify `/health` reports `agent_available: true`
+- [x] Manually test the agent via curl (see below)
+- [x] Build the chat UI: floating button in bottom-right, slide-out panel
+- [x] Wire it to `POST /chat`, maintain last 10 turns of history in React state
+- [x] Empty-state suggestions ("What kind of teams has Tal led?", "Tell me about Tal's experience with Azure.", "What does Tal do outside of work?")
+- [x] Show "tools used" subtly, as a transparency signal — proves the agent isn't making things up
 
 ```bash
 curl -X POST http://localhost:5003/chat \
