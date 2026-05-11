@@ -1,20 +1,25 @@
 import { useEffect, useRef, useState } from "react";
+import { API } from "../config";
 
-type Message = {
+type ChatTurn = {
   role: "user" | "assistant";
   content: string;
 };
 
+type DisplayMessage = {
+  role: "user" | "assistant";
+  content: string;
+  tools_used?: string[];
+  isError?: boolean;
+};
+
 const STORAGE_KEY = "chat-panel-open";
 
-const FAKE_MESSAGES: Message[] = [
-  { role: "user", content: "What companies has Tal worked at?" },
-  {
-    role: "assistant",
-    content:
-      "Tal has worked at SmartLinx Solutions, PRA Group, Secure Islands Technologies, Ness Technologies, and AnyClip — progressing from team leadership through systems architecture to engineering management.",
-  },
-];
+const ERROR_MESSAGES: Record<number, string> = {
+  429: "Too many questions for now — try again in a bit, or email me directly.",
+  503: "The chat is taking a break. Try refreshing, or use the contact link.",
+};
+const NETWORK_ERROR = "Couldn't reach the server. Check that the service is running.";
 
 export default function ChatPanel() {
   const [isOpen, setIsOpen] = useState<boolean>(() => {
@@ -24,7 +29,10 @@ export default function ChatPanel() {
       return false;
     }
   });
+  const [messages, setMessages] = useState<DisplayMessage[]>([]);
+  const [history, setHistory] = useState<ChatTurn[]>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const desktopToggleRef = useRef<HTMLButtonElement>(null);
@@ -40,12 +48,15 @@ export default function ChatPanel() {
   useEffect(() => {
     if (isOpen) {
       textareaRef.current?.focus();
-      messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
     } else {
       const isMd = window.matchMedia("(min-width: 768px)").matches;
       (isMd ? desktopToggleRef : mobileToggleRef).current?.focus();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -59,18 +70,61 @@ export default function ChatPanel() {
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || isLoading) return;
+
     setInput("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    const userTurn: ChatTurn = { role: "user", content: text };
+    setMessages((prev) => [...prev, userTurn]);
+    setIsLoading(true);
+
+    const historyForRequest = history.slice(-10);
+
+    try {
+      const resp = await fetch(`${API.agent}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: historyForRequest }),
+      });
+
+      if (!resp.ok) {
+        const msg =
+          ERROR_MESSAGES[resp.status] ??
+          "The chat is taking a break. Try refreshing, or use the contact link.";
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: msg, isError: true },
+        ]);
+      } else {
+        const data = (await resp.json()) as {
+          reply: string;
+          tools_used: string[];
+        };
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: data.reply, tools_used: data.tools_used },
+        ]);
+        setHistory((prev) =>
+          [...prev, userTurn, { role: "assistant" as const, content: data.reply }].slice(-10)
+        );
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: NETWORK_ERROR, isError: true },
+      ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      void handleSend();
     }
   };
 
@@ -100,12 +154,17 @@ export default function ChatPanel() {
           className="md:hidden fixed inset-0 z-50 flex flex-col bg-zinc-950"
         >
           <PanelHeader onClose={close} />
-          <MessageList messages={FAKE_MESSAGES} messagesEndRef={messagesEndRef} />
+          <MessageList
+            messages={messages}
+            isLoading={isLoading}
+            messagesEndRef={messagesEndRef}
+          />
           <InputArea
             input={input}
+            isLoading={isLoading}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            onSend={handleSend}
+            onSend={() => void handleSend()}
             textareaRef={textareaRef}
           />
         </aside>
@@ -137,12 +196,17 @@ export default function ChatPanel() {
           className="hidden md:flex fixed top-0 right-0 h-full w-[360px] z-40 flex-col bg-zinc-900 border-l border-zinc-800"
         >
           <PanelHeader onClose={close} />
-          <MessageList messages={FAKE_MESSAGES} messagesEndRef={messagesEndRef} />
+          <MessageList
+            messages={messages}
+            isLoading={isLoading}
+            messagesEndRef={messagesEndRef}
+          />
           <InputArea
             input={input}
+            isLoading={isLoading}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            onSend={handleSend}
+            onSend={() => void handleSend()}
             textareaRef={textareaRef}
           />
         </aside>
@@ -168,9 +232,11 @@ function PanelHeader({ onClose }: { onClose: () => void }) {
 
 function MessageList({
   messages,
+  isLoading,
   messagesEndRef,
 }: {
-  messages: Message[];
+  messages: DisplayMessage[];
+  isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
   return (
@@ -182,7 +248,9 @@ function MessageList({
         >
           <div
             className={
-              msg.role === "user"
+              msg.isError
+                ? "max-w-[85%] rounded-lg px-3 py-2 text-sm text-zinc-500 italic"
+                : msg.role === "user"
                 ? "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-700 text-zinc-100"
                 : "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-800/60 border border-zinc-700/50 text-zinc-200"
             }
@@ -191,6 +259,15 @@ function MessageList({
           </div>
         </div>
       ))}
+
+      {isLoading && (
+        <div className="flex justify-start">
+          <div className="rounded-lg px-3 py-2 text-sm bg-zinc-800/60 border border-zinc-700/50 text-zinc-500 italic animate-pulse-soft">
+            thinking…
+          </div>
+        </div>
+      )}
+
       <div ref={messagesEndRef} />
     </div>
   );
@@ -198,12 +275,14 @@ function MessageList({
 
 function InputArea({
   input,
+  isLoading,
   onInput,
   onKeyDown,
   onSend,
   textareaRef,
 }: {
   input: string;
+  isLoading: boolean;
   onInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSend: () => void;
@@ -218,13 +297,14 @@ function InputArea({
           onChange={onInput}
           onKeyDown={onKeyDown}
           placeholder="Ask anything about Tal…"
+          disabled={isLoading}
           rows={1}
-          className="flex-1 resize-none rounded border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-accent-600 transition-colors overflow-y-auto"
+          className="flex-1 resize-none rounded border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-accent-600 disabled:opacity-50 transition-colors overflow-y-auto"
           style={{ minHeight: "2.5rem", maxHeight: "8rem" }}
         />
         <button
           onClick={onSend}
-          disabled={!input.trim()}
+          disabled={!input.trim() || isLoading}
           aria-label="Send message"
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-zinc-700 bg-zinc-800 text-zinc-400 hover:text-accent-400 hover:border-accent-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
