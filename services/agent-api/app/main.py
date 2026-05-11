@@ -8,6 +8,7 @@ info. It cannot do anything else.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 from typing import Any
@@ -172,7 +173,7 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
                     tool_results.append({
                         "type": "tool_result",
                         "tool_use_id": block.id,
-                        "content": str(result)[:TOOL_RESULT_MAX_CHARS],
+                        "content": json.dumps(result)[:TOOL_RESULT_MAX_CHARS],
                     })
 
             messages.append({"role": "assistant", "content": assistant_content})
