@@ -18,4 +18,10 @@
     <None Remove="ExperienceApi.Tests\**" />
   </ItemGroup>
 
+  <!-- Bundle all data files into build and publish output -->
+  <ItemGroup>
+    <Content Remove="data\**" />
+    <Content Include="data\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
