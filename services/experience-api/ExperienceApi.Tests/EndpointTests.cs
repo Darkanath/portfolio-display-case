@@ -137,6 +137,18 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
         Assert.Equal(expected, resp.Headers.GetValues(header).FirstOrDefault());
     }
 
+    [Theory]
+    [InlineData("/experience")]
+    [InlineData("/skills")]
+    [InlineData("/profile")]
+    public async Task SecurityHeaders_PresentOnDataEndpoints(string path)
+    {
+        var resp = await _client.GetAsync(path);
+        Assert.Equal("nosniff", resp.Headers.GetValues("X-Content-Type-Options").FirstOrDefault());
+        Assert.Equal("DENY", resp.Headers.GetValues("X-Frame-Options").FirstOrDefault());
+        Assert.Equal("strict-origin-when-cross-origin", resp.Headers.GetValues("Referrer-Policy").FirstOrDefault());
+    }
+
     // --- CORS ---
 
     [Fact]

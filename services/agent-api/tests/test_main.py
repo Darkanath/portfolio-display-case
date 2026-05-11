@@ -170,6 +170,30 @@ class TestChatSuccess:
         assert messages_sent[-1]["content"] == "follow up"
 
 
+class TestToolIterationLimit:
+    def test_loop_breaks_after_max_iterations(self):
+        from unittest.mock import AsyncMock
+        from app.main import MAX_TOOL_ITERATIONS
+
+        tool_block = SimpleNamespace(
+            type="tool_use", id="toolu_01", name="get_technical_skills", input={}
+        )
+        always_tool = SimpleNamespace(stop_reason="tool_use", content=[tool_block])
+
+        mock_llm = MagicMock()
+        mock_llm.messages.create.return_value = always_tool
+
+        with (
+            patch("app.main._get_client", return_value=mock_llm),
+            patch("app.main.dispatch", new_callable=AsyncMock, return_value={"data": "x"}),
+        ):
+            resp = client.post("/chat", json={"message": "go", "history": []})
+
+        assert resp.status_code == 200
+        assert mock_llm.messages.create.call_count == MAX_TOOL_ITERATIONS
+        assert "rephrase" in resp.json()["reply"].lower()
+
+
 class TestToolResultTruncation:
     def test_oversized_tool_result_is_truncated_before_llm(self):
         from types import SimpleNamespace
@@ -201,3 +225,30 @@ class TestToolResultTruncation:
         assert tool_result_msg["role"] == "user"
         fed_content = tool_result_msg["content"][0]["content"]
         assert len(fed_content) <= TOOL_RESULT_MAX_CHARS
+
+    def test_tool_result_is_valid_json_not_python_repr(self):
+        import json as _json
+        from unittest.mock import AsyncMock
+
+        tool_block = SimpleNamespace(
+            type="tool_use", id="toolu_02", name="get_technical_skills", input={}
+        )
+        first_resp = SimpleNamespace(stop_reason="tool_use", content=[tool_block])
+        second_resp = _make_text_response("Done.")
+
+        mock_llm = MagicMock()
+        mock_llm.messages.create.side_effect = [first_resp, second_resp]
+
+        # None would serialize as 'None' with str(), but 'null' with json.dumps
+        tool_data = {"key": None, "items": [1, 2, 3]}
+
+        with (
+            patch("app.main._get_client", return_value=mock_llm),
+            patch("app.main.dispatch", new_callable=AsyncMock, return_value=tool_data),
+        ):
+            client.post("/chat", json={"message": "list skills", "history": []})
+
+        second_call_msgs = mock_llm.messages.create.call_args_list[1].kwargs["messages"]
+        fed_content = second_call_msgs[-1]["content"][0]["content"]
+        parsed = _json.loads(fed_content)  # raises if Python repr was used instead of JSON
+        assert parsed["key"] is None

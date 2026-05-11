@@ -90,6 +90,18 @@ class TestTopics:
         assert set(resp.json()["topics"]) == set(PERSONA_DATA.keys())
 
 
+class TestPersonaSchema:
+    def test_all_items_are_dicts(self):
+        resp = client.get("/persona")
+        body = resp.json()
+        for topic, data in body.items():
+            if "items" in data:
+                for item in data["items"]:
+                    assert isinstance(item, dict), (
+                        f"Topic '{topic}' has a non-dict item: {item!r}"
+                    )
+
+
 class TestSecurityHeaders:
     @pytest.mark.parametrize("header,expected", [
         ("x-content-type-options", "nosniff"),
