@@ -10,4 +10,12 @@
     <AssemblyName>ExperienceApi</AssemblyName>
   </PropertyGroup>
 
+  <!-- Prevent the SDK glob from picking up the test project subfolder -->
+  <ItemGroup>
+    <Compile Remove="ExperienceApi.Tests\**" />
+    <Content Remove="ExperienceApi.Tests\**" />
+    <EmbeddedResource Remove="ExperienceApi.Tests\**" />
+    <None Remove="ExperienceApi.Tests\**" />
+  </ItemGroup>
+
 </Project>

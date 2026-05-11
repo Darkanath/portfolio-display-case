@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { API } from "./config";
+import ExperienceTimeline from "./components/ExperienceTimeline";
+import SkillsGrid from "./components/SkillsGrid";
+import PersonaSection from "./components/PersonaSection";
+import CvDownloadButton from "./components/CvDownloadButton";
 
 type Profile = {
   name: string;
@@ -69,12 +73,21 @@ export default function App() {
         </header>
 
         {profile && (
-          <p className="mt-10 text-lg leading-relaxed text-zinc-300 animate-fade-up">
-            {profile.summary}
-          </p>
+          <div className="mt-10 animate-fade-up">
+            <p className="text-lg leading-relaxed text-zinc-300">
+              {profile.summary}
+            </p>
+            <div className="mt-6">
+              <CvDownloadButton />
+            </div>
+          </div>
         )}
 
-        <section className="mt-20 animate-fade-up">
+        <ExperienceTimeline />
+        <SkillsGrid />
+        <PersonaSection />
+
+        <section className="mt-24 animate-fade-up">
           <h2 className="mono text-xs uppercase tracking-widest text-zinc-500">
             Live service status
           </h2>

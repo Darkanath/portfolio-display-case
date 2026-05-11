@@ -15,6 +15,7 @@ from typing import Any
 import anthropic
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -99,7 +100,7 @@ def health() -> dict[str, Any]:
     }
 
 
-@app.get("/version", response_class=None)
+@app.get("/version", response_class=PlainTextResponse)
 def version() -> str:
     return SERVICE_VERSION
 

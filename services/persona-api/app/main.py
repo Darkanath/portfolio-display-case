@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 
 SERVICE_NAME = "persona-api"
 SERVICE_VERSION = "0.1.0"
@@ -31,7 +32,7 @@ def health() -> dict:
     return {"status": "ok", "service": SERVICE_NAME, "version": SERVICE_VERSION}
 
 
-@app.get("/version", response_class=None)
+@app.get("/version", response_class=PlainTextResponse)
 def version() -> str:
     return SERVICE_VERSION
 
