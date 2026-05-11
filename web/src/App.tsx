@@ -4,6 +4,7 @@ import ExperienceTimeline from "./components/ExperienceTimeline";
 import SkillsGrid from "./components/SkillsGrid";
 import PersonaSection from "./components/PersonaSection";
 import CvDownloadButton from "./components/CvDownloadButton";
+import ChatPanel from "./components/ChatPanel";
 
 type Profile = {
   name: string;
@@ -61,6 +62,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <ChatPanel />
       <main className="mx-auto max-w-3xl px-6 py-24 sm:py-32">
         <header className="animate-fade-up">
           <p className="mono text-accent-400">portfolio-display-case · v0.1.0</p>
