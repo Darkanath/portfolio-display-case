@@ -21,6 +21,12 @@ const ERROR_MESSAGES: Record<number, string> = {
 };
 const NETWORK_ERROR = "Couldn't reach the server. Check that the service is running.";
 
+const SUGGESTIONS = [
+  "What kind of teams has Tal led?",
+  "Tell me about Tal's experience with Azure.",
+  "What does Tal do outside of work?",
+];
+
 export default function ChatPanel() {
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     try {
@@ -128,6 +134,17 @@ export default function ChatPanel() {
     }
   };
 
+  const handleSuggestionClick = (text: string) => {
+    setInput(text);
+    textareaRef.current?.focus();
+    requestAnimationFrame(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`;
+      }
+    });
+  };
+
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     e.target.style.height = "auto";
@@ -158,6 +175,7 @@ export default function ChatPanel() {
             messages={messages}
             isLoading={isLoading}
             messagesEndRef={messagesEndRef}
+            onSuggestionClick={handleSuggestionClick}
           />
           <InputArea
             input={input}
@@ -200,6 +218,7 @@ export default function ChatPanel() {
             messages={messages}
             isLoading={isLoading}
             messagesEndRef={messagesEndRef}
+            onSuggestionClick={handleSuggestionClick}
           />
           <InputArea
             input={input}
@@ -234,13 +253,32 @@ function MessageList({
   messages,
   isLoading,
   messagesEndRef,
+  onSuggestionClick,
 }: {
   messages: DisplayMessage[];
   isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  onSuggestionClick: (text: string) => void;
 }) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      {messages.length === 0 && !isLoading && (
+        <div className="space-y-2 pt-2">
+          <p className="mono text-[10px] text-zinc-600 uppercase tracking-widest">
+            suggested
+          </p>
+          {SUGGESTIONS.map((q) => (
+            <button
+              key={q}
+              onClick={() => onSuggestionClick(q)}
+              className="block w-full text-left text-sm text-zinc-400 border border-zinc-800 rounded-lg px-3 py-2 hover:border-zinc-600 hover:text-zinc-200 transition-colors"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
+
       {messages.map((msg, i) => (
         <div
           key={i}
@@ -256,6 +294,14 @@ function MessageList({
             }
           >
             {msg.content}
+            {!msg.isError &&
+              msg.role === "assistant" &&
+              msg.tools_used &&
+              msg.tools_used.length > 0 && (
+                <p className="mt-1.5 mono text-[10px] text-zinc-600">
+                  via {msg.tools_used.join(", ")}
+                </p>
+              )}
           </div>
         </div>
       ))}
