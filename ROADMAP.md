@@ -12,15 +12,15 @@ The frontend renders the live status of all three APIs.
 **Acceptance:** `docker compose up`, visit http://localhost:5173, see your name
 at the top and three green dots in the status section.
 
-## Milestone 2 — Real data on the page (½–1 day)
+## Milestone 2 — Real data on the page ✅
 
 Wire up the rest of the CV data:
 
-- [ ] Experience timeline section (`/experience` from experience-api)
-- [ ] Skills grid section (`/skills` from experience-api)
-- [ ] Persona section (`/persona` from persona-api)
-- [ ] CV download button (`/cv-pdf` from experience-api — bundle the PDF into the image)
-- [ ] Mobile responsive at 375px width
+- [x] Experience timeline section (`/experience` from experience-api)
+- [x] Skills grid section (`/skills` from experience-api)
+- [x] Persona section (`/persona` from persona-api)
+- [x] CV download button (`/cv-pdf` from experience-api — `data/cv.pdf` bundled)
+- [x] Mobile responsive at 375px width
 
 **Acceptance:** the page tells your full professional story without the agent,
 and looks intentional on phone and desktop.

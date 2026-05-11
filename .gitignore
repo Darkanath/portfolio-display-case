@@ -31,6 +31,9 @@ venv/
 *.tfvars
 !*.tfvars.example
 
+# Local project assets (source files, not for repo)
+project-data/
+
 # Editor
 .vscode/*
 !.vscode/extensions.json
