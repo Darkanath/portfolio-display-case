@@ -148,6 +148,6 @@ resource "azurerm_container_app" "service" {
 
 output "service_urls" {
   value = {
-    for k, app in azurerm_container_app.service : k => "https://${app.latest_revision_fqdn}"
+    for k, _ in local.services : k => "https://${k}.${azurerm_container_app_environment.env.default_domain}"
   }
 }
