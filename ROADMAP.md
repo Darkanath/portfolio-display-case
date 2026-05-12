@@ -61,21 +61,23 @@ real download link in the response.
 
 Live URLs:
 - Frontend: `https://portfolio-display-case.pages.dev`
-- `experience-api`: `https://experience-api--oe2lbz0.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
-- `persona-api`: `https://persona-api--guooco8.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
-- `agent-api`: `https://agent-api--0000002.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
+- `experience-api`: `https://experience-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
+- `persona-api`: `https://persona-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
+- `agent-api`: `https://agent-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
 
 **Loose ends (finish before M5):**
-- [ ] Add GitHub Actions secrets (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`) so CI/CD deploy steps work on future pushes
-- [ ] Verify GHCR packages are set to public visibility
-- [ ] Connect Cloudflare Pages to GitHub repo in dashboard for auto-deploy on push to `main`
+- [x] Add GitHub Actions secrets (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`)
+- [x] Verify GHCR packages are set to public visibility
 - [x] Update `README.md` live site URL (currently says "coming soon")
+- [ ] Connect Cloudflare Pages to GitHub repo in dashboard for auto-deploy on push to `main` (currently CI deploys via wrangler CLI)
 
 ## Milestone 5 — Polish
 
-### CI/CD & reliability
-- [ ] Confirm GitHub Actions deploy steps succeed end-to-end on next push (depends on secrets above)
-- [ ] Add smoke test step to each workflow: `curl /health` on the new revision before marking deploy done
+### CI/CD & reliability ✅
+- [x] `web.yml` — build, test, deploy to Cloudflare Pages on push to `main`; path-filtered; `workflow_dispatch` for manual runs
+- [x] `experience-api.yml` / `persona-api.yml` / `agent-api.yml` — Docker build → GHCR push → Azure Container App update; OIDC auth; path-filtered per service
+- [x] Stable Container App URLs in Terraform output and GitHub variables (revision-suffix bug fixed)
+- [ ] Add smoke test step to each service workflow: `curl /health` on the deployed app before marking done
 
 ### Frontend UX
 - [x] OpenGraph + Twitter card meta tags so LinkedIn/Slack previews render well
