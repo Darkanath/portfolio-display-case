@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - "services/persona-api/**"
+  workflow_dispatch:
 
 # OIDC auth to Azure — no long-lived secrets in GitHub.
 permissions:
@@ -51,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/persona-api
-          push: ${{ github.event_name == 'push' }}
+          push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ steps.image.outputs.name }}:${{ steps.meta.outputs.tag }}
             ${{ steps.image.outputs.name }}:latest
@@ -60,7 +61,7 @@ jobs:
 
   deploy:
     needs: build-and-push
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: azure/login@v2
