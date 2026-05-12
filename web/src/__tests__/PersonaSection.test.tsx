@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import PersonaSection from "../components/PersonaSection";
 
 const FIXTURE = {
@@ -23,21 +23,34 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+function expandSection() {
+  fireEvent.click(screen.getByRole("button", { name: /show more about me/i }));
+}
+
 describe("PersonaSection", () => {
-  it("shows skeleton loaders while fetching", () => {
+  it("renders collapsed by default with a toggle button", () => {
     vi.mocked(fetch).mockReturnValue(new Promise(() => {}));
     render(<PersonaSection />);
+    expect(screen.getByRole("button", { name: /show more about me/i })).toBeInTheDocument();
+    expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
+  });
+
+  it("shows skeleton loaders while fetching after expanding", () => {
+    vi.mocked(fetch).mockReturnValue(new Promise(() => {}));
+    render(<PersonaSection />);
+    expandSection();
     const pulses = document.querySelectorAll(".animate-pulse");
     expect(pulses.length).toBeGreaterThan(0);
   });
 
-  it("renders topic headlines after fetch", async () => {
+  it("renders topic headlines after expanding and fetch", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(FIXTURE),
     } as Response);
 
     render(<PersonaSection />);
+    expandSection();
 
     await waitFor(() => {
       expect(
@@ -54,6 +67,7 @@ describe("PersonaSection", () => {
     } as Response);
 
     render(<PersonaSection />);
+    expandSection();
 
     await waitFor(() => {
       expect(
@@ -69,6 +83,7 @@ describe("PersonaSection", () => {
     } as Response);
 
     render(<PersonaSection />);
+    expandSection();
 
     await waitFor(() => {
       expect(screen.getByText("Dune")).toBeInTheDocument();
@@ -79,6 +94,7 @@ describe("PersonaSection", () => {
   it("shows error message when fetch fails", async () => {
     vi.mocked(fetch).mockRejectedValue(new Error("network error"));
     render(<PersonaSection />);
+    expandSection();
 
     await waitFor(() => {
       expect(screen.getByText("persona-api unavailable")).toBeInTheDocument();
@@ -92,9 +108,31 @@ describe("PersonaSection", () => {
     } as Response);
 
     render(<PersonaSection />);
+    expandSection();
 
     await waitFor(() => {
       expect(screen.getByText("persona-api unavailable")).toBeInTheDocument();
     });
+  });
+
+  it("collapses content when toggle is clicked again", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(FIXTURE),
+    } as Response);
+
+    render(<PersonaSection />);
+    expandSection();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("I tell stories at tables, not just in standups.")
+      ).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /hide/i }));
+    expect(
+      screen.queryByText("I tell stories at tables, not just in standups.")
+    ).not.toBeInTheDocument();
   });
 });

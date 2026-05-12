@@ -53,21 +53,21 @@ export default function ExperienceTimeline() {
         <div className="mt-8 space-y-6">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse space-y-2">
-              <div className="h-4 w-2/3 rounded bg-zinc-800" />
-              <div className="h-3 w-1/3 rounded bg-zinc-800/60" />
+              <div className="h-4 w-2/3 rounded bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-3 w-1/3 rounded bg-zinc-200/60 dark:bg-zinc-800/60" />
             </div>
           ))}
         </div>
       )}
 
       {error && (
-        <p className="mt-8 mono text-xs text-zinc-600">
+        <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
           experience-api unavailable
         </p>
       )}
 
       {items && (
-        <ol className="mt-8 relative border-l border-zinc-800">
+        <ol className="mt-8 relative border-l border-zinc-200 dark:border-zinc-800">
           {items.map((job, idx) => {
             const isCurrent = job.current;
             const dateRange = `${formatDate(job.start, false)} – ${formatDate(job.end, isCurrent)}`;
@@ -79,7 +79,7 @@ export default function ExperienceTimeline() {
                   className={`absolute -left-[9px] flex h-4 w-4 items-center justify-center rounded-full border-2 ${
                     isCurrent
                       ? "border-accent-500 bg-accent-500/20"
-                      : "border-zinc-700 bg-zinc-950"
+                      : "border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950"
                   }`}
                   aria-hidden="true"
                 >
@@ -93,15 +93,15 @@ export default function ExperienceTimeline() {
                   style={idx > 0 ? { animationDelay: `${idx * 80}ms` } : undefined}
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 className="display text-xl text-zinc-100">{job.title}</h3>
+                    <h3 className="display text-xl text-zinc-900 dark:text-zinc-100">{job.title}</h3>
                     <span className="mono text-xs text-zinc-500 shrink-0">{dateRange}</span>
                   </div>
-                  <p className="mono text-sm text-zinc-400 mt-0.5">{job.company}</p>
+                  <p className="mono text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">{job.company}</p>
 
                   <ul className="mt-3 space-y-1.5">
                     {job.highlights.map((h, hi) => (
-                      <li key={hi} className="flex gap-2 text-sm text-zinc-300 leading-snug">
-                        <span className="text-zinc-600 shrink-0 mt-px">·</span>
+                      <li key={hi} className="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300 leading-snug">
+                        <span className="text-zinc-400 dark:text-zinc-600 shrink-0 mt-px">·</span>
                         <span>{h}</span>
                       </li>
                     ))}
@@ -112,7 +112,7 @@ export default function ExperienceTimeline() {
                       {job.stack.map((tech) => (
                         <li
                           key={tech}
-                          className="mono text-xs px-2 py-0.5 rounded border border-zinc-700 bg-zinc-900/60 text-zinc-400"
+                          className="mono text-xs px-2 py-0.5 rounded border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/60 text-zinc-600 dark:text-zinc-400"
                         >
                           {tech}
                         </li>

@@ -36,16 +36,16 @@ export default function SkillsGrid() {
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="animate-pulse space-y-2">
-              <div className="h-3 w-1/3 rounded bg-zinc-800" />
-              <div className="h-3 w-2/3 rounded bg-zinc-800/60" />
-              <div className="h-3 w-1/2 rounded bg-zinc-800/60" />
+              <div className="h-3 w-1/3 rounded bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-3 w-2/3 rounded bg-zinc-200/60 dark:bg-zinc-800/60" />
+              <div className="h-3 w-1/2 rounded bg-zinc-200/60 dark:bg-zinc-800/60" />
             </div>
           ))}
         </div>
       )}
 
       {error && (
-        <p className="mt-8 mono text-xs text-zinc-600">
+        <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
           experience-api unavailable
         </p>
       )}
@@ -60,7 +60,7 @@ export default function SkillsGrid() {
               <dd>
                 <ul className="space-y-1.5">
                   {items.map((skill) => (
-                    <li key={skill} className="text-sm text-zinc-300 leading-snug">
+                    <li key={skill} className="text-sm text-zinc-700 dark:text-zinc-300 leading-snug">
                       {skill}
                     </li>
                   ))}
