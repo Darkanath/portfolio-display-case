@@ -1,11 +1,16 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tal Shterzer — Engineering Manager & Systems Architect</title>
     <meta name="description" content="Portfolio of Tal Shterzer: 17+ years of engineering leadership, cloud-native architecture on Azure, and AI-augmented development." />
+    <script>
+      if (localStorage.getItem('theme') !== 'light') {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +19,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-zinc-950 text-zinc-100 antialiased">
+  <body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
