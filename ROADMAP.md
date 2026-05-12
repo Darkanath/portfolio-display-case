@@ -45,31 +45,59 @@ curl -X POST http://localhost:5003/chat \
 **Acceptance:** a visitor can chat with the agent and ask for the CV, getting a
 real download link in the response.
 
-## Milestone 4 — Ship it (½–1 day)
+## Milestone 4 — Ship it ✅
 
-- [ ] Push the repo public to GitHub
-- [ ] Enable GitHub Container Registry, make image visibility public
-- [ ] Configure Azure OIDC federated credentials (one-time, see `infra/terraform/AUTH.md` — TODO)
-- [ ] `terraform init && terraform apply` from `infra/terraform/`
-- [ ] First deploys happen on next push to main (path-filtered workflows trigger automatically)
-- [ ] Deploy the frontend to Cloudflare Pages (point at the GitHub repo)
-- [ ] Update `ALLOWED_ORIGINS` in Terraform with the Pages URL
-- [ ] Re-apply Terraform
-- [ ] Verify the live site works end-to-end
+- [x] Push the repo public to GitHub
+- [x] Enable GitHub Container Registry, make image visibility public
+- [x] Configure Azure OIDC federated credentials (App Registration `2009e768-482a-4a1c-bb9c-b389ef160bed`, federated to `main` branch)
+- [x] Terraform remote state in Azure Blob Storage (`pdctfstate` / `tfstate` container, `westeurope`)
+- [x] `terraform init && terraform apply` — three Container Apps live in `westeurope`
+- [x] GitHub Actions workflows for all three services (`experience-api.yml`, `persona-api.yml`, `agent-api.yml`)
+- [x] Deploy the frontend to Cloudflare Pages (`https://portfolio-display-case.pages.dev`)
+- [x] Update `ALLOWED_ORIGINS` in Terraform with the Pages URL
+- [x] Verify the live site works end-to-end — all three `/health` endpoints return `ok`
 
-**Acceptance:** you can send the public URL to someone, they can browse, ask
-the agent something, and download the CV.
+**Acceptance:** ✅ The site is live. All three services healthy. Agent returns answers.
 
-## Milestone 5 — Polish (ongoing)
+Live URLs:
+- Frontend: `https://portfolio-display-case.pages.dev`
+- `experience-api`: `https://experience-api--oe2lbz0.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
+- `persona-api`: `https://persona-api--guooco8.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
+- `agent-api`: `https://agent-api--0000002.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
 
-- [ ] OpenGraph + Twitter card meta tags so LinkedIn previews look good
-- [ ] Sitemap + robots.txt
-- [ ] Real favicon
-- [ ] Replace placeholder persona content with real storytelling/RPG content
-- [ ] Add a "Team Decisions" section if you want the leadership-stories piece later
-- [ ] Add an interactive RPG scenario demo if you want that piece later
-- [ ] Custom domain via Cloudflare Registrar (~$12/year)
-- [ ] LinkedIn + CV updates with the live URL
+**Loose ends (finish before M5):**
+- [ ] Add GitHub Actions secrets (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`) so CI/CD deploy steps work on future pushes
+- [ ] Verify GHCR packages are set to public visibility
+- [ ] Connect Cloudflare Pages to GitHub repo in dashboard for auto-deploy on push to `main`
+- [x] Update `README.md` live site URL (currently says "coming soon")
+
+## Milestone 5 — Polish
+
+### CI/CD & reliability
+- [ ] Confirm GitHub Actions deploy steps succeed end-to-end on next push (depends on secrets above)
+- [ ] Add smoke test step to each workflow: `curl /health` on the new revision before marking deploy done
+
+### Frontend UX
+- [x] OpenGraph + Twitter card meta tags so LinkedIn/Slack previews render well
+- [x] Real favicon (SVG — "TS" initials in teal on dark zinc)
+- [x] Sitemap (`/sitemap.xml`) and `robots.txt` static files in `web/public/`
+- [ ] Improve chat panel: loading skeleton while waiting for agent response, error state with retry button
+- [ ] Accessibility audit: tab order, focus rings, ARIA labels on all interactive elements, colour contrast check in light mode
+
+### Content
+- [ ] Replace placeholder `persona-api` data with real storytelling content (the RPG backstory, interests, leadership philosophy)
+- [ ] Update `experience-api` CV data to match current CV exactly (dates, titles, bullet points)
+- [ ] Verify CV PDF bundled in `experience-api` is the latest version
+
+### Custom domain
+- [ ] Register domain via Cloudflare Registrar (~$12/year) or point an existing domain
+- [ ] Add custom domain to Cloudflare Pages project
+- [ ] Update `ALLOWED_ORIGINS` in Terraform and re-apply once domain is active
+
+### Promotion
+- [ ] LinkedIn profile URL updated to live site
+- [ ] CV footer/header updated with live URL
+- [ ] Share with target audience
 
 ## Working with Claude Code on this repo
 

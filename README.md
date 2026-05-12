@@ -3,7 +3,7 @@
 This repository is itself a demonstration. The code, architecture, and operational
 choices are deliberate signals about how I think and work.
 
-**Live site:** _(coming soon)_
+**Live site:** https://portfolio-display-case.pages.dev
 
 ## What this is
 

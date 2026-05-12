@@ -1,12 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio-display-case",
+  "pages_build_output_dir": "dist",
   "compatibility_date": "2026-05-12",
   "observability": {
     "enabled": true
-  },
-  "assets": {
-    "not_found_handling": "single-page-application"
   },
   "compatibility_flags": [
     "nodejs_compat"
