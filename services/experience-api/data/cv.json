@@ -85,10 +85,10 @@
   "skills": {
     "languages": ["C#", "C++", ".NET (Framework, Core, .NET 8/10)", "TypeScript", "Python (learning)"],
     "cloud": ["Microsoft Azure", "Azure Container Apps", "Azure Data Factory", "Microsoft Fabric"],
-    "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "MongoDB", "Cosmos DB"],
-    "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM tool-calling", "prompt engineering"],
-    "leadership": ["team building", "hiring", "performance management", "technical roadmapping", "Agile/Scrum"],
-    "practices": ["microservices", "containerization (Docker)", "CI/CD (GitHub Actions)", "PCI-DSS"]
+    "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "MongoDB", "CosmosDB"],
+    "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM Tool-Calling", "Prompt Engineering", "MCP Servers"],
+    "leadership": ["Team Building", "Hiring", "Performance Management", "Technical Roadmapping", "Agile/Scrum"],
+    "practices": ["Microservices", "Containerization (Docker)", "CI/CD (GitHub Actions)", "PCI-DSS"]
   },
   "education": [
     {
