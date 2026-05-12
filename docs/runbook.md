@@ -9,7 +9,7 @@ All commands assume `az` CLI is logged in and the correct subscription is active
 
 | Thing | Location |
 |---|---|
-| Azure resources | Resource group `portfolio-display-case`, region `israelcentral` |
+| Azure resources | Resource group `portfolio-display-case`, region `westeurope` |
 | Container images | `ghcr.io/darkanath/{experience,persona,agent}-api:latest` |
 | Terraform state | Azure Blob Storage — see [Terraform state](#terraform-state) below |
 | Anthropic API key | Azure Container Apps secret `anthropic-api-key` on `agent-api` |

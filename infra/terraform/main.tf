@@ -22,7 +22,7 @@ variable "project" {
 
 variable "location" {
   type    = string
-  default = "israelcentral"
+  default = "westeurope"
 }
 
 variable "ghcr_owner" {

@@ -31,6 +31,7 @@ venv/
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
+backend.tf
 
 # Local project assets (source files, not for repo)
 project-data/
