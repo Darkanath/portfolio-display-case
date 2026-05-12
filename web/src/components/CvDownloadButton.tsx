@@ -5,7 +5,7 @@ export default function CvDownloadButton() {
     <a
       href={`${API.experience}/cv-pdf`}
       download="Tal_Shterzer_CV.pdf"
-      className="inline-flex items-center gap-2 mono text-sm px-4 py-2 rounded border border-accent-600 text-accent-400 hover:bg-accent-500/10 hover:border-accent-500 transition-colors"
+      className="inline-flex items-center gap-2 mono text-sm px-4 py-2 rounded border border-accent-600 text-accent-700 dark:text-accent-400 hover:bg-accent-500/10 hover:border-accent-500 hover:text-accent-600 dark:hover:text-accent-300 transition-colors"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

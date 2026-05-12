@@ -168,7 +168,7 @@ export default function ChatPanel() {
         onClick={open}
         aria-label="Open Ask Tal chat"
         aria-expanded={isOpen}
-        className="md:hidden fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-accent-400 shadow-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+        className="md:hidden fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-accent-600 dark:text-accent-400 shadow-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
       >
         <ChatIcon />
       </button>
@@ -206,9 +206,9 @@ export default function ChatPanel() {
           aria-expanded={false}
           className="hidden md:flex fixed top-0 right-0 h-full w-12 z-40 flex-col items-center justify-center gap-4 bg-zinc-100 dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
         >
-          <ChatIcon className="text-accent-400" />
+          <ChatIcon className="text-accent-600 dark:text-accent-400" />
           <span
-            className="mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400 tracking-[0.15em] uppercase select-none"
+            className="mono text-[11px] font-medium text-zinc-600 dark:text-zinc-400 tracking-[0.15em] uppercase select-none"
             style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
           >
             Ask Tal
@@ -252,7 +252,7 @@ function PanelHeader({ onClose }: { onClose: () => void }) {
       <button
         onClick={onClose}
         aria-label="Close chat"
-        className="flex items-center justify-center h-8 w-8 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+        className="flex items-center justify-center h-8 w-8 rounded text-zinc-600 dark:text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
       >
         <CloseIcon />
       </button>
@@ -275,7 +275,7 @@ function MessageList({
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
       {messages.length === 0 && !isLoading && (
         <div className="space-y-2 pt-2">
-          <p className="mono text-[10px] text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">
+          <p className="mono text-[10px] text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">
             suggested
           </p>
           {SUGGESTIONS.map((q) => (
@@ -298,7 +298,7 @@ function MessageList({
           <div
             className={
               msg.isError
-                ? "max-w-[85%] rounded-lg px-3 py-2 text-sm text-zinc-500 italic"
+                ? "max-w-[85%] rounded-lg px-3 py-2 text-sm text-zinc-600 dark:text-zinc-500 italic"
                 : msg.role === "user"
                   ? "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100"
                   : "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200"
@@ -309,7 +309,7 @@ function MessageList({
               msg.role === "assistant" &&
               msg.tools_used &&
               msg.tools_used.length > 0 && (
-                <p className="mt-1.5 mono text-[10px] text-zinc-400 dark:text-zinc-600">
+                <p className="mt-1.5 mono text-[10px] text-zinc-600 dark:text-zinc-400">
                   via {msg.tools_used.join(", ")}
                 </p>
               )}
@@ -319,7 +319,7 @@ function MessageList({
 
       {isLoading && (
         <div className="flex justify-start">
-          <div className="rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-500 italic animate-pulse-soft">
+          <div className="rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-600 dark:text-zinc-500 italic animate-pulse-soft">
             thinking…
           </div>
         </div>
@@ -363,12 +363,12 @@ function InputArea({
           onClick={onSend}
           disabled={!input.trim() || isLoading}
           aria-label="Send message"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:text-accent-400 hover:border-accent-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-accent-600 dark:hover:text-accent-400 hover:border-accent-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <SendIcon />
         </button>
       </div>
-      <p className="mt-1.5 mono text-[10px] text-zinc-400 dark:text-zinc-600">
+      <p className="mt-1.5 mono text-[10px] text-zinc-600 dark:text-zinc-400">
         Enter to send · Shift+Enter for newline
       </p>
     </div>

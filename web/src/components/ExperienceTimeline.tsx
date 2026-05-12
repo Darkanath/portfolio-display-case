@@ -55,7 +55,7 @@ export default function ExperienceTimeline() {
 
   return (
     <section aria-label="Experience" className="mt-24">
-      <h2 className="mono text-xs uppercase tracking-widest text-zinc-500">
+      <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         experience
       </h2>
 
@@ -71,7 +71,7 @@ export default function ExperienceTimeline() {
       )}
 
       {error && (
-        <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
+        <p className="mt-8 mono text-xs text-zinc-600 dark:text-zinc-400">
           experience-api unavailable
         </p>
       )}
@@ -108,7 +108,7 @@ export default function ExperienceTimeline() {
                     <h3 className="display text-xl text-zinc-900 dark:text-zinc-100">
                       {job.title}
                     </h3>
-                    <span className="mono text-xs text-zinc-500 shrink-0">
+                    <span className="mono text-xs text-zinc-600 dark:text-zinc-500 shrink-0">
                       {dateRange}
                     </span>
                   </div>
@@ -122,7 +122,7 @@ export default function ExperienceTimeline() {
                         key={hi}
                         className="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300 leading-snug"
                       >
-                        <span className="text-zinc-400 dark:text-zinc-600 shrink-0 mt-px">
+                        <span className="text-zinc-500 dark:text-zinc-600 shrink-0 mt-px">
                           ·
                         </span>
                         <span>{h}</span>

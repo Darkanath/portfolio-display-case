@@ -12,6 +12,10 @@
   }
 
   ::selection {
+    @apply bg-accent-500/30 text-zinc-900;
+  }
+
+  .dark ::selection {
     @apply bg-accent-500/30 text-accent-100;
   }
 }

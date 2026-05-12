@@ -24,13 +24,13 @@ export default function PersonaSection() {
 
   return (
     <section aria-label="Beyond the CV" className="mt-24">
-      <h2 className="mono text-xs uppercase tracking-widest text-zinc-500">
+      <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         beyond the cv
       </h2>
       <button
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        className="mt-3 mono text-xs text-accent-400 hover:text-accent-300 transition-colors"
+        className="mt-3 mono text-xs text-accent-700 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300 transition-colors"
       >
         {expanded ? "Hide ↑" : "Show more about me ↓"}
       </button>
@@ -50,7 +50,7 @@ export default function PersonaSection() {
           )}
 
           {error && (
-            <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
+            <p className="mt-8 mono text-xs text-zinc-600 dark:text-zinc-400">
               persona-api unavailable
             </p>
           )}
@@ -63,7 +63,7 @@ export default function PersonaSection() {
                     {topic.headline}
                   </h3>
                   {"body" in topic && (
-                    <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {topic.body}
                     </p>
                   )}
@@ -75,7 +75,7 @@ export default function PersonaSection() {
                           (item, i) => (
                             <li
                               key={i}
-                              className="text-sm text-zinc-500 dark:text-zinc-400 leading-snug"
+                              className="text-sm text-zinc-600 dark:text-zinc-400 leading-snug"
                             >
                               {item.title && (
                                 <span className="text-zinc-700 dark:text-zinc-300">
@@ -83,7 +83,7 @@ export default function PersonaSection() {
                                 </span>
                               )}
                               {item.author && (
-                                <span className="text-zinc-400 dark:text-zinc-500">
+                                <span className="text-zinc-600 dark:text-zinc-500">
                                   {" "}
                                   — {item.author}
                                 </span>

@@ -28,7 +28,7 @@ export default function SkillsGrid() {
 
   return (
     <section aria-label="Skills" className="mt-24">
-      <h2 className="mono text-xs uppercase tracking-widest text-zinc-500">
+      <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         skills
       </h2>
 
@@ -45,7 +45,7 @@ export default function SkillsGrid() {
       )}
 
       {error && (
-        <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
+        <p className="mt-8 mono text-xs text-zinc-600 dark:text-zinc-400">
           experience-api unavailable
         </p>
       )}
@@ -54,7 +54,7 @@ export default function SkillsGrid() {
         <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
           {Object.entries(skills).map(([category, items]) => (
             <div key={category}>
-              <dt className="mono text-xs uppercase tracking-widest text-zinc-500 mb-3">
+              <dt className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500 mb-3">
                 {CATEGORY_LABELS[category] ?? category}
               </dt>
               <dd>

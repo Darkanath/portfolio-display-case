@@ -6,13 +6,14 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        serif: ['"Instrument Serif"', "Georgia", "serif"],
+        serif: ['"Play"', "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "Menlo", "monospace"],
       },
       colors: {
         accent: {
           50: "#f0fdfa",
           100: "#ccfbf1",
+          300: "#5eead4",
           400: "#2dd4bf",
           500: "#14b8a6",
           600: "#0d9488",

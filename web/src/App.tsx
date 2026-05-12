@@ -95,7 +95,7 @@ export default function App() {
             className="w-40 sm:w-56 rounded-2xl object-cover self-center sm:self-start shrink-0"
           />
           <div>
-            <p className="mono text-accent-400">
+            <p className="mono text-accent-700 dark:text-accent-400">
               portfolio-display-case · v0.1.0
             </p>
             <h1 className="display mt-6 text-5xl sm:text-7xl leading-[1.05]">
@@ -123,7 +123,7 @@ export default function App() {
         <PersonaSection />
 
         <section className="mt-24 animate-fade-up">
-          <h2 className="mono text-xs uppercase tracking-widest text-zinc-500">
+          <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
             Live service status
           </h2>
           <ul className="mt-4 space-y-2">
@@ -135,7 +135,7 @@ export default function App() {
                 <span className="mono">{svc.name}</span>
                 <span className="flex items-center gap-3">
                   {svc.latencyMs !== undefined && (
-                    <span className="mono text-xs text-zinc-500">
+                    <span className="mono text-xs text-zinc-600 dark:text-zinc-500">
                       {svc.latencyMs} ms
                     </span>
                   )}
@@ -144,17 +144,17 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 mono text-xs text-zinc-500">
+          <p className="mt-4 mono text-xs text-zinc-600 dark:text-zinc-500">
             Services scale to zero when idle. A slow first response is the
             cold-start — intentional, and free.
           </p>
         </section>
 
-        <footer className="mt-24 border-t border-zinc-100 dark:border-zinc-900 pt-8 mono text-xs text-zinc-500">
+        <footer className="mt-24 border-t border-zinc-100 dark:border-zinc-900 pt-8 mono text-xs text-zinc-600 dark:text-zinc-500">
           Built with React, .NET 10, Python, and Claude Code · source on{" "}
           <a
             href="https://github.com/Darkanath/portfolio-display-case"
-            className="text-accent-400 hover:text-accent-300"
+            className="text-accent-700 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300"
           >
             GitHub
           </a>
