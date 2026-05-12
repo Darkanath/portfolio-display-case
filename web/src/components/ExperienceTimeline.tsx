@@ -57,21 +57,23 @@ export default function ExperienceTimeline() {
   useEffect(() => {
     if (!items) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActiveJobId(e.target.id.replace("job-", ""));
-        });
-      },
-      { rootMargin: "-30% 0px -50% 0px", threshold: 0 },
-    );
+    const update = () => {
+      const mid = window.innerHeight / 2;
+      let closest = items[0].id;
+      let best = Infinity;
+      items.forEach((job) => {
+        const el = document.getElementById(`job-${job.id}`);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - mid);
+        if (dist < best) { best = dist; closest = job.id; }
+      });
+      setActiveJobId(closest);
+    };
 
-    items.forEach((job) => {
-      const el = document.getElementById(`job-${job.id}`);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
   }, [items]);
 
   return (
@@ -110,15 +112,13 @@ export default function ExperienceTimeline() {
                 <span
                   className={[
                     "absolute -left-[9px] flex h-4 w-4 items-center justify-center rounded-full border-2 transition-colors duration-300",
-                    isCurrent
+                    isActive
                       ? "border-accent-500 bg-accent-500/20"
-                      : isActive
-                        ? "border-accent-500 bg-accent-500/20"
-                        : "border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950",
+                      : "border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950",
                   ].join(" ")}
                   aria-hidden="true"
                 >
-                  {isCurrent && (
+                  {isCurrent && isActive && (
                     <span className="h-1.5 w-1.5 rounded-full bg-accent-400 animate-pulse-soft" />
                   )}
                 </span>
