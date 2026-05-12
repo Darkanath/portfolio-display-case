@@ -8,7 +8,7 @@ The frontend SPA. React 19 + Vite + TypeScript + Tailwind. Deployed to Cloudflar
 - Tailwind for styling (no CSS-in-JS)
 - API URLs come from Vite env vars (`VITE_EXPERIENCE_API`, `VITE_PERSONA_API`, `VITE_AGENT_API`)
 - No client-side state library in v1; React state + URL state
-- Dark mode default
+- Dark mode default; light mode toggle available (persisted via localStorage)
 
 ## Design
 
