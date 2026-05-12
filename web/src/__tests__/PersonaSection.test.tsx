@@ -31,7 +31,9 @@ describe("PersonaSection", () => {
   it("renders collapsed by default with a toggle button", () => {
     vi.mocked(fetch).mockReturnValue(new Promise(() => {}));
     render(<PersonaSection />);
-    expect(screen.getByRole("button", { name: /show more about me/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /show more about me/i }),
+    ).toBeInTheDocument();
     expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
   });
 
@@ -54,10 +56,12 @@ describe("PersonaSection", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("I tell stories at tables, not just in standups.")
+        screen.getByText("I tell stories at tables, not just in standups."),
       ).toBeInTheDocument();
     });
-    expect(screen.getByText("What I've been reading lately.")).toBeInTheDocument();
+    expect(
+      screen.getByText("What I've been reading lately."),
+    ).toBeInTheDocument();
   });
 
   it("renders body text for text-body topics", async () => {
@@ -71,7 +75,7 @@ describe("PersonaSection", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/When I'm not running engineering teams/)
+        screen.getByText(/When I'm not running engineering teams/),
       ).toBeInTheDocument();
     });
   });
@@ -126,13 +130,13 @@ describe("PersonaSection", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("I tell stories at tables, not just in standups.")
+        screen.getByText("I tell stories at tables, not just in standups."),
       ).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole("button", { name: /hide/i }));
     expect(
-      screen.queryByText("I tell stories at tables, not just in standups.")
+      screen.queryByText("I tell stories at tables, not just in standups."),
     ).not.toBeInTheDocument();
   });
 });

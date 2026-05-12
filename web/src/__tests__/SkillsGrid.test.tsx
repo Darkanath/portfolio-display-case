@@ -66,7 +66,9 @@ describe("SkillsGrid", () => {
     render(<SkillsGrid />);
 
     await waitFor(() => {
-      expect(screen.getByText("experience-api unavailable")).toBeInTheDocument();
+      expect(
+        screen.getByText("experience-api unavailable"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -79,7 +81,9 @@ describe("SkillsGrid", () => {
     render(<SkillsGrid />);
 
     await waitFor(() => {
-      expect(screen.getByText("experience-api unavailable")).toBeInTheDocument();
+      expect(
+        screen.getByText("experience-api unavailable"),
+      ).toBeInTheDocument();
     });
   });
 });

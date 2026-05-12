@@ -29,7 +29,7 @@ const SERVICES: Omit<ServiceHealth, "status">[] = [
 export default function App() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [health, setHealth] = useState<ServiceHealth[]>(
-    SERVICES.map((s) => ({ ...s, status: "checking" }))
+    SERVICES.map((s) => ({ ...s, status: "checking" })),
   );
   const [isDark, setIsDark] = useState<boolean>(() => {
     try {
@@ -65,7 +65,7 @@ export default function App() {
           } catch {
             return { ...svc, status: "down" };
           }
-        })
+        }),
       );
       setHealth(results);
     };
@@ -95,7 +95,9 @@ export default function App() {
             className="w-40 sm:w-56 rounded-2xl object-cover self-center sm:self-start shrink-0"
           />
           <div>
-            <p className="mono text-accent-400">portfolio-display-case · v0.1.0</p>
+            <p className="mono text-accent-400">
+              portfolio-display-case · v0.1.0
+            </p>
             <h1 className="display mt-6 text-5xl sm:text-7xl leading-[1.05]">
               {profile?.name ?? "Tal Shterzer"}
             </h1>
@@ -167,7 +169,7 @@ function Dot({ status }: { status: ServiceHealth["status"] }) {
     status === "ok"
       ? "bg-accent-400 shadow-[0_0_10px_rgb(45_212_191_/_0.6)]"
       : status === "down"
-      ? "bg-rose-500"
-      : "bg-zinc-400 dark:bg-zinc-600 animate-pulse-soft";
+        ? "bg-rose-500"
+        : "bg-zinc-400 dark:bg-zinc-600 animate-pulse-soft";
   return <span className={`inline-block h-2.5 w-2.5 rounded-full ${color}`} />;
 }

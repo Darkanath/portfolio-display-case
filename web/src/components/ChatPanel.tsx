@@ -19,7 +19,8 @@ const ERROR_MESSAGES: Record<number, string> = {
   429: "Too many questions for now — try again in a bit, or email me directly.",
   503: "The chat is taking a break. Try refreshing, or use the contact link.",
 };
-const NETWORK_ERROR = "Couldn't reach the server. Check that the service is running.";
+const NETWORK_ERROR =
+  "Couldn't reach the server. Check that the service is running.";
 
 const SUGGESTIONS = [
   "What kind of teams has Tal led?",
@@ -111,10 +112,18 @@ export default function ChatPanel() {
         };
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: data.reply, tools_used: data.tools_used },
+          {
+            role: "assistant",
+            content: data.reply,
+            tools_used: data.tools_used,
+          },
         ]);
         setHistory((prev) =>
-          [...prev, userTurn, { role: "assistant" as const, content: data.reply }].slice(-10)
+          [
+            ...prev,
+            userTurn,
+            { role: "assistant" as const, content: data.reply },
+          ].slice(-10),
         );
       }
     } catch {
@@ -237,7 +246,9 @@ export default function ChatPanel() {
 function PanelHeader({ onClose }: { onClose: () => void }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
-      <h2 className="font-sans text-sm font-medium text-zinc-800 dark:text-zinc-200">Ask Tal</h2>
+      <h2 className="font-sans text-sm font-medium text-zinc-800 dark:text-zinc-200">
+        Ask Tal
+      </h2>
       <button
         onClick={onClose}
         aria-label="Close chat"
@@ -289,8 +300,8 @@ function MessageList({
               msg.isError
                 ? "max-w-[85%] rounded-lg px-3 py-2 text-sm text-zinc-500 italic"
                 : msg.role === "user"
-                ? "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100"
-                : "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200"
+                  ? "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100"
+                  : "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200"
             }
           >
             {msg.content}

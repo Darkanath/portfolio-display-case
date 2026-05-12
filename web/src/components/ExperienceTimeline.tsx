@@ -13,8 +13,18 @@ type Experience = {
 };
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export function formatDate(raw: string | null, current: boolean): string {
@@ -90,25 +100,41 @@ export default function ExperienceTimeline() {
 
                 <div
                   className={`${idx === 0 ? "animate-fade-up" : ""}`}
-                  style={idx > 0 ? { animationDelay: `${idx * 80}ms` } : undefined}
+                  style={
+                    idx > 0 ? { animationDelay: `${idx * 80}ms` } : undefined
+                  }
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 className="display text-xl text-zinc-900 dark:text-zinc-100">{job.title}</h3>
-                    <span className="mono text-xs text-zinc-500 shrink-0">{dateRange}</span>
+                    <h3 className="display text-xl text-zinc-900 dark:text-zinc-100">
+                      {job.title}
+                    </h3>
+                    <span className="mono text-xs text-zinc-500 shrink-0">
+                      {dateRange}
+                    </span>
                   </div>
-                  <p className="mono text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">{job.company}</p>
+                  <p className="mono text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">
+                    {job.company}
+                  </p>
 
                   <ul className="mt-3 space-y-1.5">
                     {job.highlights.map((h, hi) => (
-                      <li key={hi} className="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300 leading-snug">
-                        <span className="text-zinc-400 dark:text-zinc-600 shrink-0 mt-px">·</span>
+                      <li
+                        key={hi}
+                        className="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300 leading-snug"
+                      >
+                        <span className="text-zinc-400 dark:text-zinc-600 shrink-0 mt-px">
+                          ·
+                        </span>
                         <span>{h}</span>
                       </li>
                     ))}
                   </ul>
 
                   {job.stack.length > 0 && (
-                    <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Tech stack">
+                    <ul
+                      className="mt-3 flex flex-wrap gap-1.5"
+                      aria-label="Tech stack"
+                    >
                       {job.stack.map((tech) => (
                         <li
                           key={tech}

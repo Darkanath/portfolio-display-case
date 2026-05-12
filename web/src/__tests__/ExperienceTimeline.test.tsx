@@ -93,7 +93,9 @@ describe("ExperienceTimeline", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Led a team of 8 engineers")).toBeInTheDocument();
-      expect(screen.getByText("Shipped three major features")).toBeInTheDocument();
+      expect(
+        screen.getByText("Shipped three major features"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -116,7 +118,9 @@ describe("ExperienceTimeline", () => {
     render(<ExperienceTimeline />);
 
     await waitFor(() => {
-      expect(screen.getByText("experience-api unavailable")).toBeInTheDocument();
+      expect(
+        screen.getByText("experience-api unavailable"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -129,7 +133,9 @@ describe("ExperienceTimeline", () => {
     render(<ExperienceTimeline />);
 
     await waitFor(() => {
-      expect(screen.getByText("experience-api unavailable")).toBeInTheDocument();
+      expect(
+        screen.getByText("experience-api unavailable"),
+      ).toBeInTheDocument();
     });
   });
 });

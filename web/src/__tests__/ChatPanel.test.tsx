@@ -29,19 +29,25 @@ afterEach(() => {
 
 // Opens the panel by clicking the first available toggle button.
 async function openPanel(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getAllByRole("button", { name: "Open Ask Tal chat" })[0]);
+  await user.click(
+    screen.getAllByRole("button", { name: "Open Ask Tal chat" })[0],
+  );
 }
 
 describe("ChatPanel — closed state", () => {
   it("renders at least one toggle button", () => {
     render(<ChatPanel />);
-    const toggles = screen.getAllByRole("button", { name: "Open Ask Tal chat" });
+    const toggles = screen.getAllByRole("button", {
+      name: "Open Ask Tal chat",
+    });
     expect(toggles.length).toBeGreaterThan(0);
   });
 
   it("toggle button reports aria-expanded false", () => {
     render(<ChatPanel />);
-    const [toggle] = screen.getAllByRole("button", { name: "Open Ask Tal chat" });
+    const [toggle] = screen.getAllByRole("button", {
+      name: "Open Ask Tal chat",
+    });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 });
@@ -52,9 +58,15 @@ describe("ChatPanel — empty state", () => {
     render(<ChatPanel />);
     await openPanel(user);
 
-    expect(screen.getAllByText("What kind of teams has Tal led?").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Tell me about Tal's experience with Azure.").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("What does Tal do outside of work?").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("What kind of teams has Tal led?").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("Tell me about Tal's experience with Azure.").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("What does Tal do outside of work?").length,
+    ).toBeGreaterThan(0);
   });
 
   it("clicking a suggestion pre-fills input without sending", async () => {
@@ -64,7 +76,9 @@ describe("ChatPanel — empty state", () => {
 
     await user.click(screen.getAllByText("What kind of teams has Tal led?")[0]);
 
-    const textarea = screen.getAllByPlaceholderText("Ask anything about Tal…")[0];
+    const textarea = screen.getAllByPlaceholderText(
+      "Ask anything about Tal…",
+    )[0];
     expect(textarea).toHaveValue("What kind of teams has Tal led?");
     expect(fetch).not.toHaveBeenCalled();
   });
@@ -77,7 +91,9 @@ describe("ChatPanel — sending messages", () => {
     // Deferred json() keeps the loading state alive until we resolve it.
     let resolveJson!: (v: { reply: string; tools_used: string[] }) => void;
     const jsonPromise = new Promise<{ reply: string; tools_used: string[] }>(
-      (res) => { resolveJson = res; }
+      (res) => {
+        resolveJson = res;
+      },
     );
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
@@ -87,39 +103,52 @@ describe("ChatPanel — sending messages", () => {
     render(<ChatPanel />);
     await openPanel(user);
 
-    const textarea = screen.getAllByPlaceholderText("Ask anything about Tal…")[0];
+    const textarea = screen.getAllByPlaceholderText(
+      "Ask anything about Tal…",
+    )[0];
     await user.type(textarea, "What teams?");
     await user.keyboard("{Enter}");
 
     // json() is still pending — loading bubble should be visible
     await waitFor(() =>
-      expect(screen.getAllByText("thinking…").length).toBeGreaterThan(0)
+      expect(screen.getAllByText("thinking…").length).toBeGreaterThan(0),
     );
 
     // Unblock the response
-    resolveJson({ reply: "Tal has led cross-functional teams.", tools_used: ["get_work_experience"] });
+    resolveJson({
+      reply: "Tal has led cross-functional teams.",
+      tools_used: ["get_work_experience"],
+    });
 
     await waitFor(() =>
-      expect(screen.getAllByText("Tal has led cross-functional teams.").length).toBeGreaterThan(0)
+      expect(
+        screen.getAllByText("Tal has led cross-functional teams.").length,
+      ).toBeGreaterThan(0),
     );
-    expect(screen.getAllByText(/via get_work_experience/).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/via get_work_experience/).length,
+    ).toBeGreaterThan(0);
   });
 
   it("does not show tools_used line when tools_used is empty", async () => {
     const user = userEvent.setup();
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ reply: "No tools needed.", tools_used: [] }),
+      json: () =>
+        Promise.resolve({ reply: "No tools needed.", tools_used: [] }),
     } as Response);
 
     render(<ChatPanel />);
     await openPanel(user);
 
-    await user.type(screen.getAllByPlaceholderText("Ask anything about Tal…")[0], "hi");
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
     await user.keyboard("{Enter}");
 
     await waitFor(() =>
-      expect(screen.getAllByText("No tools needed.").length).toBeGreaterThan(0)
+      expect(screen.getAllByText("No tools needed.").length).toBeGreaterThan(0),
     );
     expect(screen.queryByText(/^via /)).not.toBeInTheDocument();
   });
@@ -135,18 +164,22 @@ describe("ChatPanel — sending messages", () => {
     await openPanel(user);
 
     // Chips are present before sending
-    expect(screen.getAllByText("What does Tal do outside of work?").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("What does Tal do outside of work?").length,
+    ).toBeGreaterThan(0);
 
     // Click a chip to pre-fill, then send
     await user.click(screen.getAllByText("What kind of teams has Tal led?")[0]);
     await user.keyboard("{Enter}");
 
     await waitFor(() =>
-      expect(screen.getAllByText("Some reply.").length).toBeGreaterThan(0)
+      expect(screen.getAllByText("Some reply.").length).toBeGreaterThan(0),
     );
 
     // The other chip texts should no longer appear
-    expect(screen.queryAllByText("Tell me about Tal's experience with Azure.")).toHaveLength(0);
+    expect(
+      screen.queryAllByText("Tell me about Tal's experience with Azure."),
+    ).toHaveLength(0);
   });
 
   it("Shift+Enter inserts a newline instead of sending", async () => {
@@ -154,7 +187,9 @@ describe("ChatPanel — sending messages", () => {
     render(<ChatPanel />);
     await openPanel(user);
 
-    const textarea = screen.getAllByPlaceholderText("Ask anything about Tal…")[0];
+    const textarea = screen.getAllByPlaceholderText(
+      "Ask anything about Tal…",
+    )[0];
     await user.type(textarea, "line one");
     await user.keyboard("{Shift>}{Enter}{/Shift}");
 
@@ -170,15 +205,18 @@ describe("ChatPanel — error handling", () => {
 
     render(<ChatPanel />);
     await openPanel(user);
-    await user.type(screen.getAllByPlaceholderText("Ask anything about Tal…")[0], "hi");
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
     await user.keyboard("{Enter}");
 
     await waitFor(() =>
       expect(
         screen.getAllByText(
-          "Too many questions for now — try again in a bit, or email me directly."
-        ).length
-      ).toBeGreaterThan(0)
+          "Too many questions for now — try again in a bit, or email me directly.",
+        ).length,
+      ).toBeGreaterThan(0),
     );
   });
 
@@ -188,15 +226,18 @@ describe("ChatPanel — error handling", () => {
 
     render(<ChatPanel />);
     await openPanel(user);
-    await user.type(screen.getAllByPlaceholderText("Ask anything about Tal…")[0], "hi");
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
     await user.keyboard("{Enter}");
 
     await waitFor(() =>
       expect(
         screen.getAllByText(
-          "The chat is taking a break. Try refreshing, or use the contact link."
-        ).length
-      ).toBeGreaterThan(0)
+          "The chat is taking a break. Try refreshing, or use the contact link.",
+        ).length,
+      ).toBeGreaterThan(0),
     );
   });
 
@@ -206,15 +247,18 @@ describe("ChatPanel — error handling", () => {
 
     render(<ChatPanel />);
     await openPanel(user);
-    await user.type(screen.getAllByPlaceholderText("Ask anything about Tal…")[0], "hi");
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
     await user.keyboard("{Enter}");
 
     await waitFor(() =>
       expect(
         screen.getAllByText(
-          "Couldn't reach the server. Check that the service is running."
-        ).length
-      ).toBeGreaterThan(0)
+          "Couldn't reach the server. Check that the service is running.",
+        ).length,
+      ).toBeGreaterThan(0),
     );
   });
 });
@@ -225,12 +269,16 @@ describe("ChatPanel — keyboard and accessibility", () => {
     render(<ChatPanel />);
     await openPanel(user);
 
-    expect(screen.getAllByRole("button", { name: "Close chat" }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: "Close chat" }).length,
+    ).toBeGreaterThan(0);
 
     await user.keyboard("{Escape}");
 
     await waitFor(() =>
-      expect(screen.queryAllByRole("button", { name: "Close chat" })).toHaveLength(0)
+      expect(
+        screen.queryAllByRole("button", { name: "Close chat" }),
+      ).toHaveLength(0),
     );
   });
 
@@ -243,7 +291,9 @@ describe("ChatPanel — keyboard and accessibility", () => {
     await user.click(closeButtons[0]);
 
     await waitFor(() =>
-      expect(screen.queryAllByRole("button", { name: "Close chat" })).toHaveLength(0)
+      expect(
+        screen.queryAllByRole("button", { name: "Close chat" }),
+      ).toHaveLength(0),
     );
   });
 });

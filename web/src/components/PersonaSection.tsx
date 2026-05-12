@@ -50,7 +50,9 @@ export default function PersonaSection() {
           )}
 
           {error && (
-            <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">persona-api unavailable</p>
+            <p className="mt-8 mono text-xs text-zinc-400 dark:text-zinc-600">
+              persona-api unavailable
+            </p>
           )}
 
           {persona && (
@@ -65,26 +67,42 @@ export default function PersonaSection() {
                       {topic.body}
                     </p>
                   )}
-                  {"items" in topic && Array.isArray(topic.items) && topic.items.length > 0 && (
-                    <ul className="mt-2 space-y-1.5">
-                      {(topic.items as Record<string, string>[]).map((item, i) => (
-                        <li key={i} className="text-sm text-zinc-500 dark:text-zinc-400 leading-snug">
-                          {item.title && (
-                            <span className="text-zinc-700 dark:text-zinc-300">{item.title}</span>
-                          )}
-                          {item.author && (
-                            <span className="text-zinc-400 dark:text-zinc-500"> — {item.author}</span>
-                          )}
-                          {item.blurb && (
-                            <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">{item.blurb}</span>
-                          )}
-                          {item.note && (
-                            <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">{item.note}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {"items" in topic &&
+                    Array.isArray(topic.items) &&
+                    topic.items.length > 0 && (
+                      <ul className="mt-2 space-y-1.5">
+                        {(topic.items as Record<string, string>[]).map(
+                          (item, i) => (
+                            <li
+                              key={i}
+                              className="text-sm text-zinc-500 dark:text-zinc-400 leading-snug"
+                            >
+                              {item.title && (
+                                <span className="text-zinc-700 dark:text-zinc-300">
+                                  {item.title}
+                                </span>
+                              )}
+                              {item.author && (
+                                <span className="text-zinc-400 dark:text-zinc-500">
+                                  {" "}
+                                  — {item.author}
+                                </span>
+                              )}
+                              {item.blurb && (
+                                <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">
+                                  {item.blurb}
+                                </span>
+                              )}
+                              {item.note && (
+                                <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">
+                                  {item.note}
+                                </span>
+                              )}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    )}
                 </div>
               ))}
             </div>

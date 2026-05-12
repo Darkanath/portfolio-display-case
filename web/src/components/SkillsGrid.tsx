@@ -60,7 +60,10 @@ export default function SkillsGrid() {
               <dd>
                 <ul className="space-y-1.5">
                   {items.map((skill) => (
-                    <li key={skill} className="text-sm text-zinc-700 dark:text-zinc-300 leading-snug">
+                    <li
+                      key={skill}
+                      className="text-sm text-zinc-700 dark:text-zinc-300 leading-snug"
+                    >
                       {skill}
                     </li>
                   ))}
