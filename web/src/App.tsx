@@ -5,6 +5,7 @@ import SkillsGrid from "./components/SkillsGrid";
 import PersonaSection from "./components/PersonaSection";
 import CvDownloadButton from "./components/CvDownloadButton";
 import ChatPanel from "./components/ChatPanel";
+import TableOfContents from "./components/TableOfContents";
 
 type Profile = {
   name: string;
@@ -77,6 +78,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <ChatPanel />
+      <TableOfContents />
 
       {/* Theme toggle — fixed top-left, clear of the chat panel strip on the right */}
       <button
@@ -122,7 +124,7 @@ export default function App() {
         <SkillsGrid />
         <PersonaSection />
 
-        <section className="mt-24 animate-fade-up">
+        <section id="status" className="mt-24 animate-fade-up">
           <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
             Live service status
           </h2>

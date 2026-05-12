@@ -42,6 +42,7 @@ export function formatDate(raw: string | null, current: boolean): string {
 export default function ExperienceTimeline() {
   const [items, setItems] = useState<Experience[] | null>(null);
   const [error, setError] = useState(false);
+  const [activeJobId, setActiveJobId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`${API.experience}/experience`)
@@ -53,8 +54,30 @@ export default function ExperienceTimeline() {
       .catch(() => setError(true));
   }, []);
 
+  useEffect(() => {
+    if (!items) return;
+
+    const update = () => {
+      const mid = window.innerHeight / 2;
+      let closest = items[0].id;
+      let best = Infinity;
+      items.forEach((job) => {
+        const el = document.getElementById(`job-${job.id}`);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - mid);
+        if (dist < best) { best = dist; closest = job.id; }
+      });
+      setActiveJobId(closest);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [items]);
+
   return (
-    <section aria-label="Experience" className="mt-24">
+    <section id="experience" aria-label="Experience" className="mt-24">
       <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         experience
       </h2>
@@ -80,26 +103,32 @@ export default function ExperienceTimeline() {
         <ol className="mt-8 relative border-l border-zinc-200 dark:border-zinc-800">
           {items.map((job, idx) => {
             const isCurrent = job.current;
+            const isActive = activeJobId === job.id;
             const dateRange = `${formatDate(job.start, false)} – ${formatDate(job.end, isCurrent)}`;
 
             return (
-              <li key={job.id} className="mb-10 ml-6 last:mb-0">
+              <li id={`job-${job.id}`} key={job.id} className="mb-10 ml-6 last:mb-0">
                 {/* Timeline node */}
                 <span
-                  className={`absolute -left-[9px] flex h-4 w-4 items-center justify-center rounded-full border-2 ${
-                    isCurrent
+                  className={[
+                    "absolute -left-[9px] flex h-4 w-4 items-center justify-center rounded-full border-2 transition-colors duration-300",
+                    isActive
                       ? "border-accent-500 bg-accent-500/20"
-                      : "border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950"
-                  }`}
+                      : "border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950",
+                  ].join(" ")}
                   aria-hidden="true"
                 >
-                  {isCurrent && (
+                  {isCurrent && isActive && (
                     <span className="h-1.5 w-1.5 rounded-full bg-accent-400 animate-pulse-soft" />
                   )}
                 </span>
 
                 <div
-                  className={`${idx === 0 ? "animate-fade-up" : ""}`}
+                  className={[
+                    idx === 0 ? "animate-fade-up" : "",
+                    "border-l-2 pl-3 transition-colors duration-300",
+                    isActive ? "border-accent-500" : "border-transparent",
+                  ].filter(Boolean).join(" ")}
                   style={
                     idx > 0 ? { animationDelay: `${idx * 80}ms` } : undefined
                   }

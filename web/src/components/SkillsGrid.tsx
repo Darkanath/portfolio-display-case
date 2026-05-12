@@ -27,7 +27,7 @@ export default function SkillsGrid() {
   }, []);
 
   return (
-    <section aria-label="Skills" className="mt-24">
+    <section id="skills" aria-label="Skills" className="mt-24">
       <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         skills
       </h2>

@@ -23,7 +23,7 @@ export default function PersonaSection() {
   }, []);
 
   return (
-    <section aria-label="Beyond the CV" className="mt-24">
+    <section id="persona" aria-label="Beyond the CV" className="mt-24">
       <h2 className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-500">
         beyond the cv
       </h2>
