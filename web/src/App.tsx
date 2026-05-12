@@ -153,7 +153,7 @@ export default function App() {
         <footer className="mt-24 border-t border-zinc-100 dark:border-zinc-900 pt-8 mono text-xs text-zinc-500">
           Built with React, .NET 10, Python, and Claude Code · source on{" "}
           <a
-            href="https://github.com/talshterzer/portfolio-display-case"
+            href="https://github.com/Darkanath/portfolio-display-case"
             className="text-accent-400 hover:text-accent-300"
           >
             GitHub

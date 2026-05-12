@@ -1,5 +1,5 @@
 project           = "portfolio-display-case"
-location          = "westeurope"
-ghcr_owner        = "talshterzer"
+location          = "israelcentral"
+ghcr_owner        = "darkanath"
 anthropic_api_key = "sk-ant-..."
 allowed_origins   = "https://your-site.pages.dev,http://localhost:5173"
