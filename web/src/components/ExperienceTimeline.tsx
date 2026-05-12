@@ -128,7 +128,7 @@ export default function ExperienceTimeline() {
                     idx === 0 ? "animate-fade-up" : "",
                     "border-l-2 pl-3 transition-colors duration-300",
                     isActive ? "border-accent-500" : "border-transparent",
-                  ].join(" ")}
+                  ].filter(Boolean).join(" ")}
                   style={
                     idx > 0 ? { animationDelay: `${idx * 80}ms` } : undefined
                   }

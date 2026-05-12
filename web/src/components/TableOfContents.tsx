@@ -12,7 +12,7 @@ const SECTION_IDS = SECTIONS.map((s) => s.id);
 
 export default function TableOfContents() {
   const activeId = useActiveSection(SECTION_IDS);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => window.scrollY > 80);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function TableOfContents() {
       </nav>
 
       {/* Mobile: sticky top bar, slides in after 80px scroll */}
-      <div
+      <nav
         aria-label="Page sections"
         className={[
           "fixed top-0 left-0 right-0 z-30 md:hidden",
@@ -107,7 +107,7 @@ export default function TableOfContents() {
             })}
           </div>
         )}
-      </div>
+      </nav>
     </>
   );
 }
