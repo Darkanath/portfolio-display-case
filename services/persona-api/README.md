@@ -1,8 +1,7 @@
 # persona-api
 
-The non-CV side of Tal: storytelling, tabletop roleplaying, scenario design,
-and whatever else doesn't belong on a resume but says something real about
-how I think.
+The non-CV side of Tal: boardgames, tabletop roleplaying, and whatever else
+doesn't belong on a resume but says something real about how I think.
 
 ## Stack
 

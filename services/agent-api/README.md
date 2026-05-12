@@ -36,6 +36,26 @@ conversation is persisted server-side.
 Realistic worst case at full quota saturation: a few dollars per month.
 Realistic actual case: under $2/month.
 
+## Run locally
+
+The easiest path is `docker compose up` from the repo root — it wires all
+services together with the correct URLs.
+
+To run this service in isolation:
+
+```bash
+cp ../../.env.example .env
+# edit .env — set ANTHROPIC_API_KEY, EXPERIENCE_API_URL, PERSONA_API_URL
+uv sync
+uv run uvicorn app.main:app --reload --port 8080
+# or
+docker build -t agent-api . && docker run -p 5003:8080 --env-file .env agent-api
+```
+
+`EXPERIENCE_API_URL` and `PERSONA_API_URL` must point to running instances of
+those services. For local standalone use `http://localhost:5001` and
+`http://localhost:5002`.
+
 ## Environment
 
 | Var | Required | Default |
