@@ -44,7 +44,7 @@ jobs:
           VITE_AGENT_API: ${{ vars.VITE_AGENT_API }}
 
       - name: Deploy to Cloudflare Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: npx wrangler pages deploy dist --project-name portfolio-display-case
         working-directory: web
         env:
