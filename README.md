@@ -3,7 +3,7 @@
 This repository is itself a demonstration. The code, architecture, and operational
 choices are deliberate signals about how I think and work.
 
-**Live site:** https://portfolio-display-case.pages.dev
+**Live site:** https://talshterzer.dev
 
 ## What this is
 
@@ -15,7 +15,7 @@ A three-service microservices application backing a single-page portfolio.
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │  web (React + Vite + TypeScript)                    │    │
 │  └─────────────────────────────────────────────────────┘    │
-└──────────┬──────────────┬──────────────┬───────────────────┘
+└──────────┬──────────────┬──────────────┬────────────────────┘
            │              │              │
            ▼              ▼              ▼
    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
