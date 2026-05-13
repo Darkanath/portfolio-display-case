@@ -14,10 +14,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request as StarletteRequest
 
 SERVICE_NAME = "persona-api"
-SERVICE_VERSION = "0.1.0"
+SERVICE_VERSION = "0.2.0"
 
 DATA_PATH = Path(__file__).parent.parent / "data" / "persona.json"
 PERSONA_DATA: dict = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+
+PROFESSIONAL_DATA_PATH = Path(__file__).parent.parent / "data" / "professional.json"
+PROFESSIONAL_DATA: dict = json.loads(PROFESSIONAL_DATA_PATH.read_text(encoding="utf-8"))
 
 app = FastAPI(title=SERVICE_NAME, version=SERVICE_VERSION)
 
@@ -71,3 +74,20 @@ def persona_topic(topic: str) -> dict:
 @app.get("/topics")
 def topics() -> dict:
     return {"topics": list(PERSONA_DATA.keys())}
+
+
+@app.get("/professional/topics")
+def professional_topics() -> dict:
+    return {"topics": list(PROFESSIONAL_DATA.keys())}
+
+
+@app.get("/professional")
+def professional_all() -> dict:
+    return PROFESSIONAL_DATA
+
+
+@app.get("/professional/{topic}")
+def professional_topic(topic: str) -> dict:
+    if topic not in PROFESSIONAL_DATA:
+        raise HTTPException(status_code=404, detail=f"Unknown topic: {topic}")
+    return {topic: PROFESSIONAL_DATA[topic]}

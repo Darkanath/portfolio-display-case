@@ -1,0 +1,146 @@
+{
+  "leadership_philosophy": {
+    "headline": "Principled, systems-oriented leadership. Stewardship over expediency.",
+    "body": "The manager's role is stewardship of quality: maintaining coherent direction, explicit standards, and long-term viability — not merely shipping whatever can be shipped fastest. Tactical compromises are acceptable, but only when framed as temporary, documented, and paired with a correction plan.",
+    "pillars": [
+      {
+        "title": "Autonomy within guardrails",
+        "body": "Developers should think, contribute, and own their work. But autonomy only functions when paired with shared principles, clear decision rights, agreed processes, and accountability. When authority is bypassed or standards treated as optional, I intervene — not from ego, but to keep systems aligned."
+      },
+      {
+        "title": "Clarity as a managerial obligation",
+        "body": "Ambiguity that creates downstream waste is a failure of management. I push hard to define what is in scope versus implied, who owns product versus technical decisions, and what a policy means in practice — not just in abstract wording."
+      },
+      {
+        "title": "Protective but not indulgent",
+        "body": "I advocate for my team: push for sane timelines, clarify stakeholder expectations, and challenge organizational behavior that puts people in compromised positions. In return, I expect professional discipline. When someone falls short, my instinct is to correct and align, not punish."
+      }
+    ]
+  },
+  "achievements": {
+    "headline": "A portfolio that is itself the demo.",
+    "projects": [
+      {
+        "name": "portfolio-display-case",
+        "body": "A three-service cloud-native portfolio site where the architecture is the demonstration. Independent CI/CD pipelines per service, a bounded LLM agent with actual tool-calling, Terraform-managed Azure infrastructure kept under $5/month. The CLAUDE.md file at the repo root functions as onboarding documentation for AI-assisted development — structure that keeps every session aligned to the same architectural contract.",
+        "highlights": [
+          "Polyglot microservices: .NET 10, Python/FastAPI, React/Vite/TypeScript",
+          "LLM agent with tool-calling, rate limits, and explicit prompt rules",
+          "Path-filtered GitHub Actions CI/CD — a persona JSON change does not rebuild the .NET container",
+          "Azure Container Apps, scale-to-zero, sub-$5/month operating cost"
+        ]
+      },
+      {
+        "name": "Smartlinx platform modernization",
+        "body": "Stepped into a stressed technical organization anchored to a deeply legacy .NET product. Built foundational infrastructure — API gateway, JWT auth, API versioning, centralized logging, Redis caching, containerization, Kubernetes then ACA — before feature work, to create a sustainable modernization platform. Replaced Next.js (used only for routing) with React Router, reducing Docker image size by ~78%. Defined explicit architectural guardrails: no new DataAccessFast usage, DI-friendly patterns, legacy coupling confined and tracked for extraction.",
+        "highlights": [
+          "~78% Docker image size reduction by removing an unnecessary Next.js dependency",
+          "Built API gateway, JWT auth, Redis caching, and containerization from scratch",
+          "Named and contained legacy risks before they became irreversible architectural decisions"
+        ]
+      }
+    ]
+  },
+  "ai_engineering": {
+    "headline": "LLMs as bounded product interfaces, not chat widgets.",
+    "body": "I treat LLMs as interaction layers that need security boundaries, tool interfaces, product scope, and an execution model — the same design discipline applied to any other system component.",
+    "projects": [
+      {
+        "name": "AI analytics POC (Snowflake Cortex)",
+        "body": "Designed an agentic analytics layer that lets users ask data questions in natural language without direct Snowflake account provisioning. The agent connects to Snowflake Cortex via MCP Server, translates business intent into safe, bounded operations, and abstracts away the SQL-adjacent surface. Designed for composability: additional product controllers can be exposed as MCP servers, turning the agent into an orchestrator across internal capabilities.",
+        "key_patterns": [
+          "Instruction hierarchy: explicit rules on what the agent may and may not do",
+          "Tool boundary design: when to call Cortex, when to use product APIs, when to refuse",
+          "Data access containment: preventing uncontrolled arbitrary database interaction",
+          "MCP as a capability contract, not just a protocol"
+        ]
+      },
+      {
+        "name": "portfolio-display-case agent",
+        "body": "Production LLM agent with tool-calling, rate and cost limits, server-side retrieval from controlled APIs, and explicit safeguards against hallucination and prompt injection. Built to demonstrate the difference between a chat widget and a genuine agent.",
+        "key_patterns": [
+          "Bounded tool surface: get_experience(), get_persona(), download_cv()",
+          "System prompt as architectural contract (CLAUDE.md pattern)",
+          "Server-side retrieval only — no client-side secrets"
+        ]
+      }
+    ]
+  },
+  "cloud_migration": {
+    "headline": "Migration is leverage. Don't waste it on a cloud-shaped monolith.",
+    "body": "I pushed back against a pure lift-and-shift during an on-prem to Azure migration. The argument: a migration is one of the few moments an organization has real leverage to break bad infrastructural habits. Recreating the on-prem topology in Azure pays for the move without capturing the strategic value.",
+    "approach": {
+      "phase_1": "Move the test database to Azure SQL Database PaaS — not Managed Instance, not SQL Server on a VM. Use it as a validation checkpoint: prove compatibility, surface issues early, and test the application against a managed target before making larger hosting decisions.",
+      "deferred": "MSMQ to Azure Service Bus, Quartz.NET jobs to Azure Functions or managed execution. Phased deliberately — not because the work was not needed, but because sequencing matters.",
+      "key_decision": "Azure SQL Database over Managed Instance forces a cleaner modernization checkpoint while remaining realistic for a first phase. SQL Server on a VM would have preserved the old operational burden in a new datacenter."
+    },
+    "principle": "Pragmatic is acceptable. Careless is not. The difference is whether the compromise is explicit, contained, and tracked."
+  },
+  "preferred_stack": {
+    "headline": "Microservices where the domains are genuinely separable. Lean everywhere else.",
+    "frontend": {
+      "stack": ["React", "Vite", "TypeScript", "Tailwind CSS"],
+      "rationale": "Minimal framework ceremony, minimal dependency bloat, explicit over magical."
+    },
+    "backend": {
+      "philosophy": "Polyglot by design, not by default. The stack should fit what the service is doing.",
+      "options": [".NET / ASP.NET Core", "Python / FastAPI", "Node.js where appropriate"],
+      "rationale": "Clean delivery over language uniformity."
+    },
+    "infrastructure": {
+      "default": "Azure Container Apps",
+      "rationale": "Independent deployability, scale-to-zero, low operational overhead, cost containment. Kubernetes only when the product actually needs Kubernetes.",
+      "principle": "Serious architecture does not mean expensive architecture."
+    },
+    "honest_uncertainty": "Service topology judgments require deep domain understanding. That takes time and study — which should happen before the architecture decisions, not after."
+  },
+  "team_culture": {
+    "retros": {
+      "headline": "A retrospective should produce a better operating model, not a morale ritual.",
+      "principles": [
+        "Expose friction that actually affected delivery or quality",
+        "Separate symptoms from causes",
+        "End with a small number of concrete changes that someone owns"
+      ],
+      "anti_pattern": "Soft, forgettable observations like 'communication could be better' are a waste of the room's time."
+    },
+    "underperformance": {
+      "headline": "Supportive, exact, and unwilling to leave expectations implicit.",
+      "phases": [
+        {
+          "phase": "Notice the pattern, not one bad week",
+          "body": "Distinguish between a temporary dip, a skills gap, a clarity problem, a motivation issue, and a reliability issue before treating anything as a performance problem."
+        },
+        {
+          "phase": "Diagnose before judging",
+          "body": "A direct 1:1 conversation aimed at understanding what is getting in the way — not a vague 'how's everything going?' but a specific, evidenced question about observable patterns."
+        },
+        {
+          "phase": "Specific, private, actionable feedback",
+          "body": "State the observed behavior, the impact, the expected standard, the support being offered, and the need for improvement — in that order. Not vague. Not punitive. Not delayed."
+        }
+      ]
+    }
+  },
+  "looking_for": {
+    "headline": "Senior engineering leadership where judgment translates into architectural authority.",
+    "role_targets": ["Senior Engineering Manager", "Director of Engineering"],
+    "company_profile": "Post-product-market-fit B2B SaaS, vertical software, or data-heavy product company. Large enough to have real complexity, small enough for one strong leader to materially shape how it builds.",
+    "team_scope": "6–12 engineers or a growing area of the department, with real architectural influence, clear decision rights, and a credible path to broader impact.",
+    "deal_breaker": "Hired for judgment but used to manage a backlog and absorb delivery pressure. Accountability without the authority to shape the decisions that determine outcomes."
+  },
+  "side_projects": {
+    "headline": "Building systems for their own sake.",
+    "body": "The same engineering instincts that show up at work show up in my communities and hobbies. When I participate in a space, I tend to notice the coordination problem and start turning it into a system.",
+    "projects": [
+      {
+        "name": "portfolio-display-case",
+        "body": "A three-service cloud-native system that is itself a demonstration of microservices, polyglot development, AI integration, and cloud-native deployment. The architecture is the product."
+      },
+      {
+        "name": "Collared.Bot",
+        "body": "A Discord bot built for a community I help run. A recurring pattern: I participate in a space, identify the repetitive workflow or coordination problem, and build something."
+      }
+    ]
+  }
+}
