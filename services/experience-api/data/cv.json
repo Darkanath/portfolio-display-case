@@ -2,7 +2,7 @@
   "profile": {
     "name": "Tal Shterzer",
     "tagline": "Engineering Manager & Systems Architect",
-    "summary": "17+ years of progressive engineering leadership, building and modernizing software systems across .NET, cloud-native architecture on Azure, and AI-augmented development workflows. I lead teams through complex cloud migrations and enterprise modernization, and I'm equally comfortable defining strategy at the whiteboard and shipping code in review.",
+    "summary": "Highly technical Engineering Manager and Systems Architect with 17+ years of progressive leadership, specializing in complex cloud migrations, enterprise modernization, and AI-driven product initiatives. Expert in translating business objectives into scalable technical roadmaps, establishing high-performance Agile cultures, and integrating AI Agents and LLM-powered automation to accelerate developer productivity and product quality. Deep expertise across Microsoft Azure, cloud-native architecture, and full-stack engineering. Drives technical excellence from strategic definition to code-level execution.",
     "location": "Israel",
     "yearsOfExperience": 17
   },
@@ -15,13 +15,12 @@
       "end": null,
       "current": true,
       "highlights": [
-        "Lead, mentor and coach an 11-engineer squad; own hiring, performance reviews, and career development",
-        "Migrating an on-prem monolith to a distributed application on Microsoft Azure using .NET Core C# and React",
-        "Fully containerized ecosystem deployed independently on Azure Container Apps",
-        "Built CI/CD pipelines from GitHub to Azure using GitHub Actions",
-        "Architected a big-data path from Azure SQL OLTP to Snowflake OLAP via OneLake (Microsoft Fabric) and Apache Iceberg",
-        "Established ETL/ELT ingestion using Azure Data Factory",
-        "Championed adoption of AI coding agents (Claude Code, GitHub Copilot) across the development workflow"
+        "Led, mentored, and coached an 11-engineer squad; own hiring, performance reviews, and career-development roadmaps; introduced Agile rituals, pair-programming, and structured mentoring for junior hires",
+        "Modernized and re-platformed a legacy on-prem monolith into a distributed cloud architecture on Microsoft Azure using .NET Core C# and React",
+        "Engineered a fully containerized ecosystem using Docker for independent, scalable deployment via Azure Container Apps",
+        "Orchestrated CI/CD pipelines from GitHub repositories to Microsoft Azure using GitHub Actions",
+        "Helmed a comprehensive BI and big-data solution, leading a cross-functional team of 4 Data Engineers and Scientists; migrated OLTP databases on Azure SQL to Snowflake OLAP via OneLake (Microsoft Fabric) and Apache Iceberg",
+        "Championed adoption of AI Agents across the development workflow, integrating LLM-powered coding agents (GitHub Copilot, Claude Code) to automate code reviews, test generation, and documentation; reduced manual overhead and improved sprint velocity"
       ],
       "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions"]
     },
@@ -33,10 +32,10 @@
       "end": "2024-12",
       "current": false,
       "highlights": [
-        "Led a document-retrieval platform for enterprise customer accounts with a Web API for new document types and source applications, on .NET 8.0",
-        "Designed and deployed software through Azure DevOps and GitHub",
-        "Led a B2B project for inter-company report exchange on .NET 8.0 and Azure",
-        "Modernized legacy systems by transitioning to microservices with gRPC and Protocol Buffers"
+        "Led a document-retrieval platform for company employees to search and retrieve customer account documents, including a Web API for integrating new document types and specialized source applications, on .NET 8.0",
+        "Designed, developed, and deployed software through Azure DevOps and GitHub",
+        "Led a Business-to-Business (B2B) project enabling download and upload of reports between businesses, built on .NET 8.0 and Microsoft Azure",
+        "Modernized systems by transitioning to Microservices with gRPC, Protocol Buffers, and .NET 8.0, resulting in significant improvement in system efficiency and reliability"
       ],
       "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps"]
     },
@@ -48,9 +47,9 @@
       "end": "2011",
       "current": false,
       "highlights": [
-        "Owned a Data Loss Prevention (DLP) security product including BI for large organizations on Microsoft SSAS",
-        "Led a 4-engineer team in Agile/Scrum",
-        "Built the system in .NET 4.0 with WPF, WCF Services, and SQL Server 2008"
+        "Managed a Data Loss Prevention (DLP) security product, including Business Intelligence solutions for large organizations on Microsoft SSAS",
+        "Led a 4-member development team using Agile-Scrum methodology",
+        "Developed and defined the system in .NET 4.0, utilizing WPF, WCF Services, and SQL Server 2008, to streamline security processes and improve customer service"
       ],
       "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS"]
     },
@@ -62,8 +61,8 @@
       "end": "2009",
       "current": false,
       "highlights": [
-        "Led an 8-person project for the Ministry of Housing: 4 developers, 2 analysts, 2 QA",
-        "Designed and implemented information-system solutions in .NET 3.5, BizTalk, and SQL Server"
+        "Led a development project for the Ministry of Housing, managing a team of 8 (4 developers, 2 system analysts, 2 QA personnel), aiming to enhance the organizational information system",
+        "Designed and implemented solutions with .NET 3.5, BizTalk, and SQL Server, contributing to greater organizational efficiency"
       ],
       "stack": [".NET 3.5", "BizTalk", "SQL Server"]
     },
@@ -75,15 +74,14 @@
       "end": "2009",
       "current": false,
       "highlights": [
-        "Managed a 9-engineer team building a desktop application and website features",
-        "Drove integrations with social networks including Facebook",
-        "Built services with WPF, ASP.NET MVC, and JavaScript"
+        "Managed a development team of 9, leading development of a desktop application and website projects with emphasis on integrations with social networks including Facebook",
+        "Led development of various services using WPF, ASP.NET MVC, and JavaScript, leading to increased user satisfaction and expanded application usage"
       ],
       "stack": ["WPF", "ASP.NET MVC", "JavaScript"]
     }
   ],
   "skills": {
-    "languages": ["C#", "C++", ".NET (Framework, Core, .NET 8/10)", "TypeScript", "Python (learning)"],
+    "languages": ["C#", "C++", ".NET (Framework, Core, .NET 8/10)", "TypeScript", "Python"],
     "cloud": ["Microsoft Azure", "Azure Container Apps", "Azure Data Factory", "Microsoft Fabric"],
     "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "MongoDB", "CosmosDB"],
     "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM Tool-Calling", "Prompt Engineering", "MCP Servers"],
