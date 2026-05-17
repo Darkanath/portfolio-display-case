@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { API } from "../config";
 
 type ChatTurn = {
@@ -304,7 +305,27 @@ function MessageList({
                   : "max-w-[85%] rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-800 dark:text-zinc-200"
             }
           >
-            {msg.content}
+            {msg.role === "assistant" && !msg.isError ? (
+              <ReactMarkdown
+                components={{
+                  p:      ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                  em:     ({ children }) => <em className="italic">{children}</em>,
+                  ul:     ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
+                  ol:     ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-0.5">{children}</ol>,
+                  li:     ({ children }) => <li>{children}</li>,
+                  code:   ({ children }) => (
+                    <code className="mono text-xs bg-zinc-300 dark:bg-zinc-700 px-1 py-0.5 rounded">
+                      {children}
+                    </code>
+                  ),
+                }}
+              >
+                {msg.content}
+              </ReactMarkdown>
+            ) : (
+              msg.content
+            )}
             {!msg.isError &&
               msg.role === "assistant" &&
               msg.tools_used &&
