@@ -71,18 +71,21 @@ export default function TableOfContents() {
           scrolled ? "translate-y-0" : "-translate-y-full",
         ].join(" ")}
       >
-        <div className="flex items-center justify-between px-4 py-2">
+        <div className="flex items-center px-4 py-2">
+          <div className="flex-1" />
           <span className="mono text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
             {activeLabel}
           </span>
-          <button
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="Toggle section menu"
-            aria-expanded={menuOpen}
-            className="flex h-7 w-7 items-center justify-center rounded text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-          >
-            <ListIcon />
-          </button>
+          <div className="flex-1 flex justify-end">
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Toggle section menu"
+              aria-expanded={menuOpen}
+              className="flex h-7 w-7 items-center justify-center rounded text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              <ListIcon />
+            </button>
+          </div>
         </div>
 
         {menuOpen && (
