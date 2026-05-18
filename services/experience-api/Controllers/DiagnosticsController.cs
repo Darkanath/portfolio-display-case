@@ -1,21 +1,20 @@
 using Asp.Versioning;
+using ExperienceApi.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace ExperienceApi.Controllers;
 
 [ApiController]
 [ApiVersionNeutral]
 [Route("")]
-public class DiagnosticsController : ControllerBase
+public class DiagnosticsController(IOptions<ServiceInfo> serviceInfo) : ControllerBase
 {
-    private const string ServiceName = "experience-api";
-    private const string ServiceVersion = "2.0.0";
-
     [HttpGet("health")]
     public IActionResult Health() =>
-        Ok(new { status = "ok", service = ServiceName, version = ServiceVersion });
+        Ok(new { status = "ok", service = serviceInfo.Value.Name, version = serviceInfo.Value.Version });
 
     [HttpGet("version")]
     public ContentResult Version() =>
-        Content(ServiceVersion, "text/plain");
+        Content(serviceInfo.Value.Version, "text/plain");
 }

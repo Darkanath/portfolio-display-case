@@ -1,4 +1,5 @@
 using ExperienceApi.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ExperienceApi.Unit.Tests.Services;
 
@@ -6,7 +7,7 @@ public class CvDataServiceTests
 {
     // CvDataService reads from AppContext.BaseDirectory/data/cv.json,
     // which the content link in the .csproj copies to the test output dir.
-    private readonly CvDataService _sut = new();
+    private readonly CvDataService _sut = new(NullLogger<CvDataService>.Instance);
 
     [Fact]
     public void GetProfile_ReturnsNonNull()

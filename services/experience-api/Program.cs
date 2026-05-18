@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ExperienceApi.Configuration;
 using ExperienceApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.Configure<ServiceInfo>(builder.Configuration.GetSection("Service"));
 builder.Services.AddSingleton<ICvDataService, CvDataService>();
 
 var app = builder.Build();

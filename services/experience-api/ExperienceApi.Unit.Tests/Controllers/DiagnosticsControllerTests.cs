@@ -1,11 +1,16 @@
+using ExperienceApi.Configuration;
 using ExperienceApi.Controllers;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace ExperienceApi.Unit.Tests.Controllers;
 
 public class DiagnosticsControllerTests
 {
-    private readonly DiagnosticsController _sut = new();
+    private static readonly IOptions<ServiceInfo> TestServiceInfo =
+        Options.Create(new ServiceInfo { Name = "experience-api", Version = "2.1.0" });
+
+    private readonly DiagnosticsController _sut = new(TestServiceInfo);
 
     [Fact]
     public void Health_ReturnsOkResult()
