@@ -14,7 +14,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request as StarletteRequest
 
 SERVICE_NAME = "persona-api"
-SERVICE_VERSION = "0.1.0"
+SERVICE_VERSION = "1.0.1"
 
 DATA_PATH = Path(__file__).parent.parent / "data" / "persona.json"
 PERSONA_DATA: dict = json.loads(DATA_PATH.read_text(encoding="utf-8"))

@@ -60,7 +60,7 @@ real download link in the response.
 **Acceptance:** ✅ The site is live. All three services healthy. Agent returns answers.
 
 Live URLs:
-- Frontend: `https://portfolio-display-case.pages.dev`
+- Frontend: `https://talshterzer.dev`
 - `experience-api`: `https://experience-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
 - `persona-api`: `https://persona-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
 - `agent-api`: `https://agent-api.salmonglacier-dcaafea0.westeurope.azurecontainerapps.io`
@@ -88,18 +88,40 @@ Live URLs:
 
 ### Content
 - [ ] Replace placeholder `persona-api` data with real storytelling content (the RPG backstory, interests, leadership philosophy)
-- [ ] Update `experience-api` CV data to match current CV exactly (dates, titles, bullet points)
-- [ ] Verify CV PDF bundled in `experience-api` is the latest version
+- [x] Update `experience-api` CV data to match current CV exactly (dates, titles, bullet points)
+- [x] Verify CV PDF bundled in `experience-api` is the latest version
 
 ### Custom domain
-- [ ] Register domain via Cloudflare Registrar (~$12/year) or point an existing domain
-- [ ] Add custom domain to Cloudflare Pages project
-- [ ] Update `ALLOWED_ORIGINS` in Terraform and re-apply once domain is active
+- [x] Register domain — `talshterzer.dev` purchased
+- [x] Add custom domain to Cloudflare Pages project
+- [x] Update `ALLOWED_ORIGINS` in Terraform and re-apply
 
 ### Promotion
-- [ ] LinkedIn profile URL updated to live site
-- [ ] CV footer/header updated with live URL
+- [ ] LinkedIn profile URL updated to `https://talshterzer.dev`
+- [ ] CV PDF footer/header updated with live URL
 - [ ] Share with target audience
+
+## Milestone 6 — Refinements
+
+### Reliability & ops
+- [ ] Smoke test step in each service workflow: `curl /health` on the deployed app before marking CI green
+- [ ] Dependabot or Renovate for automated dependency updates
+
+### Frontend UX
+- [ ] Chat panel: loading skeleton while waiting for agent response
+- [ ] Chat panel: error state with retry button (currently shows inline error text)
+- [ ] Accessibility audit: tab order, focus rings, ARIA labels on all interactive elements, colour contrast in light mode
+
+### Content
+- [ ] Replace placeholder `persona-api` data with real storytelling content
+- [ ] Military service section: add `/military` endpoint to `experience-api`, wire up frontend section
+
+### Promotion
+- [ ] LinkedIn profile URL updated to `https://talshterzer.dev`
+- [ ] CV PDF footer/header updated with live URL
+- [ ] Share with target audience
+
+---
 
 ## Working with Claude Code on this repo
 

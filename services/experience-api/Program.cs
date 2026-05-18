@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 const string ServiceName = "experience-api";
-const string ServiceVersion = "0.1.0";
+const string ServiceVersion = "1.0.1";
 
 var builder = WebApplication.CreateSlimBuilder(args);
 

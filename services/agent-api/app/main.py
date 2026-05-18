@@ -28,7 +28,7 @@ from starlette.requests import Request as StarletteRequest
 from app.tools import TOOLS, dispatch
 
 SERVICE_NAME = "agent-api"
-SERVICE_VERSION = "0.1.0"
+SERVICE_VERSION = "1.0.2"
 MODEL = "claude-haiku-4-5"
 MAX_TOKENS = 512
 MAX_TOOL_ITERATIONS = 6

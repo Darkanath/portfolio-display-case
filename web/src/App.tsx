@@ -19,6 +19,7 @@ type ServiceHealth = {
   url: string;
   status: "checking" | "ok" | "down";
   latencyMs?: number;
+  version?: string;
 };
 
 const SERVICES: Omit<ServiceHealth, "status">[] = [
@@ -62,7 +63,11 @@ export default function App() {
           try {
             const r = await fetch(svc.url, { cache: "no-store" });
             const ms = Math.round(performance.now() - t0);
-            return { ...svc, status: r.ok ? "ok" : "down", latencyMs: ms };
+            if (r.ok) {
+              const json = await r.json() as { version?: string };
+              return { ...svc, status: "ok", latencyMs: ms, version: json.version };
+            }
+            return { ...svc, status: "down", latencyMs: ms };
           } catch {
             return { ...svc, status: "down" };
           }
@@ -97,9 +102,6 @@ export default function App() {
             className="w-40 sm:w-56 rounded-2xl object-cover self-center sm:self-start shrink-0"
           />
           <div>
-            <p className="mono text-accent-700 dark:text-accent-400">
-              portfolio-display-case · v0.1.0
-            </p>
             <h1 className="display mt-6 text-5xl sm:text-7xl leading-[1.05]">
               {profile?.name ?? "Tal Shterzer"}
             </h1>
@@ -136,6 +138,11 @@ export default function App() {
               >
                 <span className="mono">{svc.name}</span>
                 <span className="flex items-center gap-3">
+                  {svc.version && (
+                    <span className="mono text-xs text-zinc-500 dark:text-zinc-600">
+                      v{svc.version}
+                    </span>
+                  )}
                   {svc.latencyMs !== undefined && (
                     <span className="mono text-xs text-zinc-600 dark:text-zinc-500">
                       {svc.latencyMs} ms
