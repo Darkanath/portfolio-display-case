@@ -5,9 +5,10 @@ and the source of truth for CV data.
 
 ## Stack
 
-- .NET 10 minimal API
+- .NET 10 Web API (MVC controllers, URL-based versioning via Asp.Versioning.Mvc)
 - Data: `data/cv.json` (baked into the container image)
 - No database, no external dependencies
+- Version: see `appsettings.json` → `Service.Version`
 
 ## Endpoints
 
@@ -15,10 +16,10 @@ and the source of truth for CV data.
 |---|---|---|
 | GET | `/health` | Liveness probe. Returns `{status, service, version}` |
 | GET | `/version` | Plain-text semver |
-| GET | `/profile` | Name, tagline, summary |
-| GET | `/experience` | Array of past and current roles |
-| GET | `/skills` | Skills grouped by category |
-| GET | `/cv-pdf` | Returns the CV as a downloadable PDF (when bundled) |
+| GET | `/api/v1/profile` | Name, tagline, summary |
+| GET | `/api/v1/experience` | Array of past and current roles |
+| GET | `/api/v1/skills` | Skills grouped by category |
+| GET | `/api/v1/cv-pdf` | Returns the CV as a downloadable PDF (when bundled) |
 
 ## Run locally
 
@@ -30,7 +31,16 @@ docker build -t experience-api . && docker run -p 5001:8080 experience-api
 
 ## How to update the CV
 
-Edit `data/cv.json`, bump the version in `Program.cs` (the `ServiceVersion`
-constant), commit, push. CI/CD will build and deploy a new revision.
+Edit `data/cv.json`, bump `Service.Version` in `appsettings.json`, commit, push.
+CI/CD will build and deploy a new revision.
 
 The "schema" is the JSON file. The "migration" is the git commit.
+
+## Testing
+
+Unit and integration tests live in `tests/experience-api/ExperienceApi.Tests/`
+(run from the repo root):
+
+```bash
+dotnet test tests/experience-api/ExperienceApi.Tests/
+```

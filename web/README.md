@@ -28,6 +28,14 @@ npm run dev
 The page expects all three APIs to be running. Use the root `docker compose up`
 to start everything together.
 
+## Testing
+
+```bash
+npm test
+```
+
+Uses Vitest. Tests live in `src/__tests__/`.
+
 ## Production build
 
 ```bash

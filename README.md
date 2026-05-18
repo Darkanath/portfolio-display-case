@@ -86,6 +86,7 @@ A senior engineer's portfolio shouldn't cost more than their lunch.
 │   ├── experience-api/      .NET 10 — work experience, skills
 │   ├── persona-api/         Python — storytelling, RPG scenarios, hobbies
 │   └── agent-api/           Python + Anthropic — "Ask Tal" chat
+├── tests/                   Test projects (mirroring service structure)
 ├── infra/terraform/         Azure infrastructure-as-code
 ├── .github/workflows/       Per-service CI/CD, path-filtered
 ├── docker-compose.yml       Local development

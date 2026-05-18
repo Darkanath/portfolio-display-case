@@ -27,3 +27,9 @@ uv run uvicorn app.main:app --reload --port 8080
 # or
 docker build -t persona-api . && docker run -p 5002:8080 persona-api
 ```
+
+## Testing
+
+```bash
+uv run pytest
+```

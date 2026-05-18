@@ -56,6 +56,12 @@ docker build -t agent-api . && docker run -p 5003:8080 --env-file .env agent-api
 those services. For local standalone use `http://localhost:5001` and
 `http://localhost:5002`.
 
+## Testing
+
+```bash
+uv run pytest
+```
+
 ## Environment
 
 | Var | Required | Default |
