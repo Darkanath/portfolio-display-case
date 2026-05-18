@@ -1,16 +1,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ExperienceApi.Services;
 
-const string ServiceName = "experience-api";
-const string ServiceVersion = "1.0.1";
+var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateSlimBuilder(args);
-
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -25,6 +25,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddSingleton<ICvDataService, CvDataService>();
+
 var app = builder.Build();
 
 app.UseCors();
@@ -37,48 +39,7 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
-// Load CV data once at startup. The file is baked into the image.
-var dataPath = Path.Combine(AppContext.BaseDirectory, "data", "cv.json");
-var cvJson = File.ReadAllText(dataPath);
-var cvData = JsonSerializer.Deserialize<JsonElement>(cvJson);
-
-app.MapGet("/health", () => Results.Ok(new
-{
-    status = "ok",
-    service = ServiceName,
-    version = ServiceVersion
-}));
-
-app.MapGet("/version", () => Results.Text(ServiceVersion));
-
-app.MapGet("/experience", () =>
-{
-    if (cvData.TryGetProperty("experience", out var experience))
-        return Results.Json(experience);
-    return Results.NotFound();
-});
-
-app.MapGet("/skills", () =>
-{
-    if (cvData.TryGetProperty("skills", out var skills))
-        return Results.Json(skills);
-    return Results.NotFound();
-});
-
-app.MapGet("/profile", () =>
-{
-    if (cvData.TryGetProperty("profile", out var profile))
-        return Results.Json(profile);
-    return Results.NotFound();
-});
-
-app.MapGet("/cv-pdf", () =>
-{
-    var pdfPath = Path.Combine(AppContext.BaseDirectory, "data", "cv.pdf");
-    if (!File.Exists(pdfPath))
-        return Results.NotFound("CV PDF not bundled in this image yet.");
-    return Results.File(pdfPath, "application/pdf", "Tal_Shterzer_CV.pdf");
-});
+app.MapControllers();
 
 app.Run();
 
