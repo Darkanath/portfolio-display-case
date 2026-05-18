@@ -89,7 +89,7 @@ export default function App() {
       <button
         onClick={() => setIsDark((v) => !v)}
         aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-        className="fixed top-4 left-4 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors text-sm"
+        className="fixed top-1.5 md:top-4 left-4 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors text-sm"
       >
         {isDark ? "☀" : "☾"}
       </button>
@@ -102,7 +102,7 @@ export default function App() {
             className="w-40 sm:w-56 rounded-2xl object-cover self-center sm:self-start shrink-0"
           />
           <div>
-            <h1 className="display mt-6 text-5xl sm:text-7xl leading-[1.05]">
+            <h1 className="display mt-6 sm:-mt-2 text-5xl sm:text-7xl leading-[1.05]">
               {profile?.name ?? "Tal Shterzer"}
             </h1>
             <p className="display mt-3 text-2xl sm:text-3xl text-zinc-500 dark:text-zinc-400 italic">

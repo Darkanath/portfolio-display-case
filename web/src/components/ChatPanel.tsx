@@ -246,17 +246,20 @@ export default function ChatPanel() {
 
 function PanelHeader({ onClose }: { onClose: () => void }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
+    <div className="flex items-center px-4 py-2 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
+      <div className="flex-1" />
       <h2 className="font-sans text-sm font-medium text-zinc-800 dark:text-zinc-200">
         Ask Tal
       </h2>
-      <button
-        onClick={onClose}
-        aria-label="Close chat"
-        className="flex items-center justify-center h-8 w-8 rounded text-zinc-600 dark:text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
-      >
-        <CloseIcon />
-      </button>
+      <div className="flex-1 flex justify-end">
+        <button
+          onClick={onClose}
+          aria-label="Close chat"
+          className="flex items-center justify-center h-7 w-7 rounded text-zinc-600 dark:text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <CloseIcon />
+        </button>
+      </div>
     </div>
   );
 }
