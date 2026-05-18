@@ -3,7 +3,7 @@ using ExperienceApi.Controllers;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
-namespace ExperienceApi.Unit.Tests.Controllers;
+namespace ExperienceApi.Tests.Controllers;
 
 public class DiagnosticsControllerTests
 {

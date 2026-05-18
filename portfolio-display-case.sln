@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
@@ -9,7 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "experience-api", "experienc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceApi", "services\experience-api\ExperienceApi.csproj", "{69EEEB49-5D6E-FBB9-A6C1-7B92E6B1EF75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceApi.Tests", "services\experience-api\ExperienceApi.Tests\ExperienceApi.Tests.csproj", "{25A84B4F-E220-46B3-A667-C2B8928E2AC0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F1A2B3C4-D5E6-7890-ABCD-EF1234567891}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "experience-api", "experience-api", "{A2B3C4D5-E6F7-8901-BCDE-F12345678902}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceApi.Tests", "tests\experience-api\ExperienceApi.Tests\ExperienceApi.Tests.csproj", "{25A84B4F-E220-46B3-A667-C2B8928E2AC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,7 +56,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CE557793-AE0E-6FED-2FA9-0D1F7C09F182} = {5854FF58-B8C5-05C6-5BF2-ACE42193F22B}
 		{69EEEB49-5D6E-FBB9-A6C1-7B92E6B1EF75} = {CE557793-AE0E-6FED-2FA9-0D1F7C09F182}
-		{25A84B4F-E220-46B3-A667-C2B8928E2AC0} = {CE557793-AE0E-6FED-2FA9-0D1F7C09F182}
+		{A2B3C4D5-E6F7-8901-BCDE-F12345678902} = {F1A2B3C4-D5E6-7890-ABCD-EF1234567891}
+		{25A84B4F-E220-46B3-A667-C2B8928E2AC0} = {A2B3C4D5-E6F7-8901-BCDE-F12345678902}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6F1C6BD-0589-42FD-8C31-4C54953D60A8}

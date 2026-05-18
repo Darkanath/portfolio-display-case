@@ -2,7 +2,7 @@ using ExperienceApi.Controllers;
 using ExperienceApi.Models;
 using ExperienceApi.Services;
 
-namespace ExperienceApi.Unit.Tests.Controllers;
+namespace ExperienceApi.Tests.Controllers;
 
 public class CvControllerTests
 {

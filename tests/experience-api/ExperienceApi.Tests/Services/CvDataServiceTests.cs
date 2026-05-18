@@ -1,7 +1,7 @@
 using ExperienceApi.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace ExperienceApi.Unit.Tests.Services;
+namespace ExperienceApi.Tests.Services;
 
 public class CvDataServiceTests
 {
