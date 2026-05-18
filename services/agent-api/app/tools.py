@@ -109,12 +109,12 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
         try:
             if tool_name == "get_profile":
-                r = await client.get(f"{EXPERIENCE_API_URL}/profile")
+                r = await client.get(f"{EXPERIENCE_API_URL}/api/v1/profile")
                 r.raise_for_status()
                 return {"profile": r.json()}
 
             if tool_name == "get_work_experience":
-                r = await client.get(f"{EXPERIENCE_API_URL}/experience")
+                r = await client.get(f"{EXPERIENCE_API_URL}/api/v1/experience")
                 r.raise_for_status()
                 experience = r.json()
                 company = (tool_input.get("company") or "").lower().strip()
@@ -126,7 +126,7 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
                 return {"experience": experience}
 
             if tool_name == "get_technical_skills":
-                r = await client.get(f"{EXPERIENCE_API_URL}/skills")
+                r = await client.get(f"{EXPERIENCE_API_URL}/api/v1/skills")
                 r.raise_for_status()
                 return {"skills": r.json()}
 
@@ -146,7 +146,7 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
 
             if tool_name == "get_cv_download_link":
                 return {
-                    "url": f"{EXPERIENCE_API_URL}/cv-pdf",
+                    "url": f"{EXPERIENCE_API_URL}/api/v1/cv-pdf",
                     "filename": "Tal_Shterzer_CV.pdf",
                     "note": "Direct download link for the latest CV PDF.",
                 }

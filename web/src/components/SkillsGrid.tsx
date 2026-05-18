@@ -17,7 +17,7 @@ export default function SkillsGrid() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch(`${API.experience}/skills`)
+    fetch(`${API.experience}/api/v1/skills`)
       .then((r) => {
         if (!r.ok) throw new Error("not ok");
         return r.json() as Promise<Skills>;

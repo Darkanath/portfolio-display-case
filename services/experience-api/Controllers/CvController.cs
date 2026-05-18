@@ -1,10 +1,12 @@
+using Asp.Versioning;
 using ExperienceApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExperienceApi.Controllers;
 
 [ApiController]
-[Route("")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}")]
 public class CvController(ICvDataService cvData) : ControllerBase
 {
     [HttpGet("profile")]

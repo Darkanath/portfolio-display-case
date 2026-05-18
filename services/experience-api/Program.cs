@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ExperienceApi.Services;
@@ -11,6 +12,15 @@ builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
+
+builder.Services
+    .AddApiVersioning(o =>
+    {
+        o.DefaultApiVersion = new ApiVersion(1, 0);
+        o.AssumeDefaultVersionWhenUnspecified = true;
+        o.ReportApiVersions = true;
+    })
+    .AddMvc();
 
 builder.Services.AddCors(options =>
 {

@@ -10,18 +10,25 @@
     <AssemblyName>ExperienceApi</AssemblyName>
   </PropertyGroup>
 
-  <!-- Prevent the SDK glob from picking up the test project subfolder -->
+  <!-- Prevent the SDK glob from picking up test project subfolders -->
   <ItemGroup>
     <Compile Remove="ExperienceApi.Tests\**" />
     <Content Remove="ExperienceApi.Tests\**" />
     <EmbeddedResource Remove="ExperienceApi.Tests\**" />
     <None Remove="ExperienceApi.Tests\**" />
+    <Compile Remove="ExperienceApi.Unit.Tests\**" />
+    <Content Remove="ExperienceApi.Unit.Tests\**" />
+    <EmbeddedResource Remove="ExperienceApi.Unit.Tests\**" />
+    <None Remove="ExperienceApi.Unit.Tests\**" />
   </ItemGroup>
 
   <!-- Bundle all data files into build and publish output -->
   <ItemGroup>
     <Content Remove="data\**" />
     <Content Include="data\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

@@ -45,7 +45,7 @@ export default function ExperienceTimeline() {
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API.experience}/experience`)
+    fetch(`${API.experience}/api/v1/experience`)
       .then((r) => {
         if (!r.ok) throw new Error("not ok");
         return r.json() as Promise<Experience[]>;

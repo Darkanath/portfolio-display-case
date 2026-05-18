@@ -49,7 +49,7 @@ export default function App() {
   }, [isDark]);
 
   useEffect(() => {
-    fetch(`${API.experience}/profile`)
+    fetch(`${API.experience}/api/v1/profile`)
       .then((r) => r.json())
       .then(setProfile)
       .catch(() => setProfile(null));

@@ -3,7 +3,7 @@ import { API } from "../config";
 export default function CvDownloadButton() {
   return (
     <a
-      href={`${API.experience}/cv-pdf`}
+      href={`${API.experience}/api/v1/cv-pdf`}
       download="Tal_Shterzer_CV.pdf"
       className="inline-flex items-center gap-2 mono text-sm px-4 py-2 rounded border border-accent-600 text-accent-700 dark:text-accent-400 hover:bg-accent-500/10 hover:border-accent-500 hover:text-accent-600 dark:hover:text-accent-300 transition-colors"
     >

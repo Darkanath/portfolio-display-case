@@ -62,14 +62,14 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Profile_ReturnsOk()
     {
-        var resp = await _client.GetAsync("/profile");
+        var resp = await _client.GetAsync("/api/v1/profile");
         Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
     }
 
     [Fact]
     public async Task Profile_HasRequiredFields()
     {
-        var resp = await _client.GetAsync("/profile");
+        var resp = await _client.GetAsync("/api/v1/profile");
         var doc = await resp.Content.ReadFromJsonAsync<JsonElement>();
         Assert.True(doc.TryGetProperty("name", out _), "missing 'name'");
         Assert.True(doc.TryGetProperty("tagline", out _), "missing 'tagline'");
@@ -80,14 +80,14 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Experience_ReturnsOk()
     {
-        var resp = await _client.GetAsync("/experience");
+        var resp = await _client.GetAsync("/api/v1/experience");
         Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
     }
 
     [Fact]
     public async Task Experience_ReturnsNonEmptyArray()
     {
-        var resp = await _client.GetAsync("/experience");
+        var resp = await _client.GetAsync("/api/v1/experience");
         var arr = await resp.Content.ReadFromJsonAsync<JsonElement>();
         Assert.Equal(JsonValueKind.Array, arr.ValueKind);
         Assert.True(arr.GetArrayLength() > 0);
@@ -96,7 +96,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Experience_EachItemHasRequiredFields()
     {
-        var resp = await _client.GetAsync("/experience");
+        var resp = await _client.GetAsync("/api/v1/experience");
         var arr = await resp.Content.ReadFromJsonAsync<JsonElement>();
         foreach (var item in arr.EnumerateArray())
         {
@@ -109,14 +109,14 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Skills_ReturnsOk()
     {
-        var resp = await _client.GetAsync("/skills");
+        var resp = await _client.GetAsync("/api/v1/skills");
         Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
     }
 
     [Fact]
     public async Task Skills_HasExpectedCategories()
     {
-        var resp = await _client.GetAsync("/skills");
+        var resp = await _client.GetAsync("/api/v1/skills");
         var doc = await resp.Content.ReadFromJsonAsync<JsonElement>();
         Assert.Equal(JsonValueKind.Object, doc.ValueKind);
         foreach (var category in new[] { "languages", "cloud", "data", "ai", "leadership", "practices" })
@@ -138,9 +138,9 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     }
 
     [Theory]
-    [InlineData("/experience")]
-    [InlineData("/skills")]
-    [InlineData("/profile")]
+    [InlineData("/api/v1/experience")]
+    [InlineData("/api/v1/skills")]
+    [InlineData("/api/v1/profile")]
     public async Task SecurityHeaders_PresentOnDataEndpoints(string path)
     {
         var resp = await _client.GetAsync(path);
@@ -154,7 +154,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Cors_AllowedOrigin_ReturnsAccessControlHeader()
     {
-        var req = new HttpRequestMessage(HttpMethod.Get, "/experience");
+        var req = new HttpRequestMessage(HttpMethod.Get, "/api/v1/experience");
         req.Headers.Add("Origin", "http://localhost:5173");
         var resp = await _client.SendAsync(req);
         Assert.Equal("http://localhost:5173",
@@ -164,7 +164,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Cors_DisallowedOrigin_NoAccessControlHeader()
     {
-        var req = new HttpRequestMessage(HttpMethod.Get, "/experience");
+        var req = new HttpRequestMessage(HttpMethod.Get, "/api/v1/experience");
         req.Headers.Add("Origin", "https://evil.example.com");
         var resp = await _client.SendAsync(req);
         Assert.False(resp.Headers.Contains("Access-Control-Allow-Origin"));
@@ -176,7 +176,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
         // ASP.NET Core sets Access-Control-Allow-Origin when the origin is valid but
         // omits Access-Control-Allow-Methods for disallowed methods. Browsers reject
         // the actual request when the method is absent from that header.
-        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        var req = new HttpRequestMessage(HttpMethod.Options, "/api/v1/experience");
         req.Headers.Add("Origin", "http://localhost:5173");
         req.Headers.Add("Access-Control-Request-Method", "DELETE");
         var resp = await _client.SendAsync(req);
@@ -188,7 +188,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Cors_Preflight_PostNotAllowed()
     {
-        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        var req = new HttpRequestMessage(HttpMethod.Options, "/api/v1/experience");
         req.Headers.Add("Origin", "http://localhost:5173");
         req.Headers.Add("Access-Control-Request-Method", "POST");
         var resp = await _client.SendAsync(req);
@@ -200,7 +200,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task Cors_Preflight_GetAllowed()
     {
-        var req = new HttpRequestMessage(HttpMethod.Options, "/experience");
+        var req = new HttpRequestMessage(HttpMethod.Options, "/api/v1/experience");
         req.Headers.Add("Origin", "http://localhost:5173");
         req.Headers.Add("Access-Control-Request-Method", "GET");
         var resp = await _client.SendAsync(req);
