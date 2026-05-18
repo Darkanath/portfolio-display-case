@@ -134,15 +134,13 @@ export default function App() {
             {health.map((svc) => (
               <li
                 key={svc.name}
-                className="flex items-center justify-between rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3"
+                className="flex items-center rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3"
               >
-                <span className="mono">{svc.name}</span>
-                <span className="flex items-center gap-3">
-                  {svc.version && (
-                    <span className="mono text-xs text-zinc-500 dark:text-zinc-600">
-                      v{svc.version}
-                    </span>
-                  )}
+                <span className="mono flex-1">{svc.name}</span>
+                <span className="w-20 text-center mono text-xs text-zinc-500 dark:text-zinc-600">
+                  {svc.version ? `v${svc.version}` : ""}
+                </span>
+                <span className="w-24 flex items-center justify-end gap-3">
                   {svc.latencyMs !== undefined && (
                     <span className="mono text-xs text-zinc-600 dark:text-zinc-500">
                       {svc.latencyMs} ms
