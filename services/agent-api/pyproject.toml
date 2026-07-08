@@ -6,7 +6,7 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.32",
-    "anthropic>=0.40",
+    "anthropic>=0.116.0",
     "httpx>=0.28",
     "slowapi>=0.1.9",
     "pydantic>=2.9",
