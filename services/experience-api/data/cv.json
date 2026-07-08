@@ -10,10 +10,10 @@
     {
       "id": "smartlinx",
       "title": "Development Manager",
-      "company": "Roga Partners / BekTek Inc. / SmartLinx Solutions",
+      "company": "SmartLinx Solutions",
       "start": "2025-01",
-      "end": null,
-      "current": true,
+      "end": "2026-06",
+      "current": false,
       "highlights": [
         "Led, mentored, and coached an 11-engineer squad; own hiring, performance reviews, and career-development roadmaps; introduced Agile rituals, pair-programming, and structured mentoring for junior hires",
         "Modernized and re-platformed a legacy on-prem monolith into a distributed cloud architecture on Microsoft Azure using .NET Core C# and React",

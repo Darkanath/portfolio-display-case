@@ -28,11 +28,17 @@ Pick these up opportunistically; they don't block the milestones below.
       `experience-api`, wire up a frontend section
 
 **Technical debt** (deferred by choice, not forgotten):
-- [ ] Chat panel loading state is a pulsing "thinking…" bubble, not a real
-      skeleton loader — fine for now, revisit if the panel gets busier
-- [ ] Accessibility audit: tab order and light-mode colour contrast haven't
-      been manually verified (aria-labels on interactive controls are
-      already in place)
+- [x] Chat panel loading state is a pulsing "thinking…" bubble, not a real
+      skeleton loader — replaced with a proper `animate-pulse` skeleton
+      matching the pattern used by every other section
+- [x] Accessibility audit: tab order and light-mode colour contrast manually
+      verified in a real browser. Found and fixed three real issues along
+      the way: `textareaRef`/`messagesEndRef` were shared across the
+      mobile+desktop duplicate DOM trees (auto-focus/auto-scroll could
+      silently target the CSS-hidden instance), the mobile full-screen chat
+      overlay had no focus trap (Tab could escape into page content hidden
+      behind it), and three `text-accent-600`/`text-zinc-400` usages failed
+      WCAG AA contrast in light mode
 
 ## Milestone 2 — experience-api: achievement metadata
 

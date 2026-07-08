@@ -47,8 +47,20 @@ export default function ChatPanel() {
 
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const desktopToggleRef = useRef<HTMLButtonElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Mobile and desktop each render their own InputArea/MessageList instance
+  // (CSS hides one per viewport, both mount in the DOM), so each needs its
+  // own ref — a single shared ref would silently end up pointing at
+  // whichever instance mounted last, which can be the hidden one.
+  const mobileTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const desktopTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const mobileMessagesEndRef = useRef<HTMLDivElement>(null);
+  const desktopMessagesEndRef = useRef<HTMLDivElement>(null);
+  const mobilePanelRef = useRef<HTMLElement>(null);
+
+  const activeTextareaRef = () =>
+    window.matchMedia("(min-width: 768px)").matches
+      ? desktopTextareaRef
+      : mobileTextareaRef;
 
   useEffect(() => {
     try {
@@ -58,7 +70,7 @@ export default function ChatPanel() {
 
   useEffect(() => {
     if (isOpen) {
-      textareaRef.current?.focus();
+      activeTextareaRef().current?.focus();
     } else {
       const isMd = window.matchMedia("(min-width: 768px)").matches;
       (isMd ? desktopToggleRef : mobileToggleRef).current?.focus();
@@ -66,8 +78,43 @@ export default function ChatPanel() {
   }, [isOpen]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Harmless no-op on whichever instance is CSS-hidden (display:none
+    // elements have no scroll position to move to).
+    mobileMessagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    desktopMessagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    // The mobile panel is a full-screen overlay (fixed inset-0) — page
+    // content behind it is visually hidden but not display:none, so without
+    // a trap, Tab from the last control inside the panel escapes into
+    // controls a keyboard user can't see. The desktop panel is a partial
+    // sidebar with the rest of the page still visibly reachable, so it
+    // doesn't need this.
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const isMd = window.matchMedia("(min-width: 768px)").matches;
+      if (isMd) return;
+      const panel = mobilePanelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), textarea:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -139,7 +186,8 @@ export default function ChatPanel() {
     if (!text || isLoading) return;
 
     setInput("");
-    if (textareaRef.current) textareaRef.current.style.height = "auto";
+    const ref = activeTextareaRef();
+    if (ref.current) ref.current.style.height = "auto";
 
     const userTurn: ChatTurn = { role: "user", content: text };
     setMessages((prev) => [...prev, userTurn]);
@@ -163,11 +211,12 @@ export default function ChatPanel() {
 
   const handleSuggestionClick = (text: string) => {
     setInput(text);
-    textareaRef.current?.focus();
+    const ref = activeTextareaRef();
+    ref.current?.focus();
     requestAnimationFrame(() => {
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`;
+      if (ref.current) {
+        ref.current.style.height = "auto";
+        ref.current.style.height = `${Math.min(ref.current.scrollHeight, 128)}px`;
       }
     });
   };
@@ -186,7 +235,7 @@ export default function ChatPanel() {
         onClick={open}
         aria-label="Open Ask Tal chat"
         aria-expanded={isOpen}
-        className="md:hidden fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-accent-600 dark:text-accent-400 shadow-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+        className="md:hidden fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-accent-700 dark:text-accent-400 shadow-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
       >
         <ChatIcon />
       </button>
@@ -194,6 +243,9 @@ export default function ChatPanel() {
       {/* Mobile: full-screen overlay */}
       {isOpen && (
         <aside
+          ref={mobilePanelRef}
+          role="dialog"
+          aria-modal="true"
           aria-label="Ask Tal chat"
           className="md:hidden fixed inset-0 z-50 flex flex-col bg-white dark:bg-zinc-950"
         >
@@ -201,7 +253,7 @@ export default function ChatPanel() {
           <MessageList
             messages={messages}
             isLoading={isLoading}
-            messagesEndRef={messagesEndRef}
+            messagesEndRef={mobileMessagesEndRef}
             onSuggestionClick={handleSuggestionClick}
             canRetry={!!lastFailedMessage}
             onRetry={() => void handleRetry()}
@@ -212,7 +264,7 @@ export default function ChatPanel() {
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             onSend={() => void handleSend()}
-            textareaRef={textareaRef}
+            textareaRef={mobileTextareaRef}
           />
         </aside>
       )}
@@ -226,7 +278,7 @@ export default function ChatPanel() {
           aria-expanded={false}
           className="hidden md:flex fixed top-0 right-0 h-full w-12 z-40 flex-col items-center justify-center gap-4 bg-zinc-100 dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
         >
-          <ChatIcon className="text-accent-600 dark:text-accent-400" />
+          <ChatIcon className="text-accent-700 dark:text-accent-400" />
           <span
             className="mono text-[11px] font-medium text-zinc-600 dark:text-zinc-400 tracking-[0.15em] uppercase select-none"
             style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
@@ -246,7 +298,7 @@ export default function ChatPanel() {
           <MessageList
             messages={messages}
             isLoading={isLoading}
-            messagesEndRef={messagesEndRef}
+            messagesEndRef={desktopMessagesEndRef}
             onSuggestionClick={handleSuggestionClick}
             canRetry={!!lastFailedMessage}
             onRetry={() => void handleRetry()}
@@ -257,7 +309,7 @@ export default function ChatPanel() {
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             onSend={() => void handleSend()}
-            textareaRef={textareaRef}
+            textareaRef={desktopTextareaRef}
           />
         </aside>
       )}
@@ -368,7 +420,7 @@ function MessageList({
               i === messages.length - 1 && (
                 <button
                   onClick={onRetry}
-                  className="mt-1.5 block mono text-[10px] uppercase tracking-widest text-accent-600 dark:text-accent-400 hover:underline"
+                  className="mt-1.5 block mono text-[10px] uppercase tracking-widest text-accent-700 dark:text-accent-400 hover:underline"
                 >
                   Retry
                 </button>
@@ -379,8 +431,13 @@ function MessageList({
 
       {isLoading && (
         <div className="flex justify-start">
-          <div className="rounded-lg px-3 py-2 text-sm bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 text-zinc-600 dark:text-zinc-500 italic animate-pulse-soft">
-            thinking…
+          <div
+            role="status"
+            aria-label="Thinking"
+            className="rounded-lg px-3 py-2.5 w-28 bg-zinc-200 dark:bg-zinc-800/60 border border-zinc-300 dark:border-zinc-700/50 animate-pulse space-y-1.5"
+          >
+            <div className="h-2 w-full rounded bg-zinc-300 dark:bg-zinc-700" />
+            <div className="h-2 w-2/3 rounded bg-zinc-300 dark:bg-zinc-700" />
           </div>
         </div>
       )}

@@ -109,9 +109,11 @@ describe("ChatPanel — sending messages", () => {
     await user.type(textarea, "What teams?");
     await user.keyboard("{Enter}");
 
-    // json() is still pending — loading bubble should be visible
+    // json() is still pending — loading skeleton should be visible
     await waitFor(() =>
-      expect(screen.getAllByText("thinking…").length).toBeGreaterThan(0),
+      expect(
+        screen.getAllByRole("status", { name: "Thinking" }).length,
+      ).toBeGreaterThan(0),
     );
 
     // Unblock the response
