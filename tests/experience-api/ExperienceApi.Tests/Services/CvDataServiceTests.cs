@@ -77,6 +77,24 @@ public class CvDataServiceTests
     }
 
     [Fact]
+    public void GetMilitaryService_ReturnsNonEmptyList()
+    {
+        var list = _sut.GetMilitaryService();
+        Assert.NotEmpty(list);
+    }
+
+    [Fact]
+    public void GetMilitaryService_EachEntryHasRequiredFields()
+    {
+        foreach (var entry in _sut.GetMilitaryService())
+        {
+            Assert.NotEmpty(entry.Type);
+            Assert.NotEmpty(entry.Unit);
+            Assert.NotEmpty(entry.Role);
+        }
+    }
+
+    [Fact]
     public void GetPdfPath_ReturnsAbsolutePath()
     {
         var path = _sut.GetPdfPath();

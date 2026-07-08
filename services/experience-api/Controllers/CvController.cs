@@ -18,6 +18,9 @@ public class CvController(ICvDataService cvData) : ControllerBase
     [HttpGet("skills")]
     public IActionResult GetSkills() => Ok(cvData.GetSkills());
 
+    [HttpGet("military")]
+    public IActionResult GetMilitaryService() => Ok(cvData.GetMilitaryService());
+
     [HttpGet("cv-pdf")]
     public IActionResult GetCvPdf()
     {

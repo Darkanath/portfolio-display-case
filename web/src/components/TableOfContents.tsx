@@ -3,6 +3,7 @@ import { useActiveSection } from "../hooks/useActiveSection";
 
 const SECTIONS = [
   { id: "experience", label: "experience" },
+  { id: "military", label: "military" },
   { id: "skills", label: "skills" },
   { id: "persona", label: "beyond the cv" },
   { id: "status", label: "status" },

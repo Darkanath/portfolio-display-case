@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API } from "./config";
 import ExperienceTimeline from "./components/ExperienceTimeline";
+import MilitaryService from "./components/MilitaryService";
 import SkillsGrid from "./components/SkillsGrid";
 import PersonaSection from "./components/PersonaSection";
 import CvDownloadButton from "./components/CvDownloadButton";
@@ -123,6 +124,7 @@ export default function App() {
         </header>
 
         <ExperienceTimeline />
+        <MilitaryService />
         <SkillsGrid />
         <PersonaSection />
 

@@ -109,9 +109,11 @@ describe("ChatPanel — sending messages", () => {
     await user.type(textarea, "What teams?");
     await user.keyboard("{Enter}");
 
-    // json() is still pending — loading bubble should be visible
+    // json() is still pending — loading skeleton should be visible
     await waitFor(() =>
-      expect(screen.getAllByText("thinking…").length).toBeGreaterThan(0),
+      expect(
+        screen.getAllByRole("status", { name: "Thinking" }).length,
+      ).toBeGreaterThan(0),
     );
 
     // Unblock the response
@@ -260,6 +262,50 @@ describe("ChatPanel — error handling", () => {
         ).length,
       ).toBeGreaterThan(0),
     );
+  });
+
+  it("shows a retry button after an error, and retry resends the same message", async () => {
+    const user = userEvent.setup();
+    vi.mocked(fetch)
+      .mockRejectedValueOnce(new Error("Network error"))
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({ reply: "Second time's the charm.", tools_used: [] }),
+      } as Response);
+
+    render(<ChatPanel />);
+    await openPanel(user);
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
+    await user.keyboard("{Enter}");
+
+    await waitFor(() =>
+      expect(screen.getAllByText("Retry").length).toBeGreaterThan(0),
+    );
+
+    await user.click(screen.getAllByText("Retry")[0]);
+
+    await waitFor(() =>
+      expect(
+        screen.getAllByText("Second time's the charm.").length,
+      ).toBeGreaterThan(0),
+    );
+    expect(screen.queryByText("Retry")).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(vi.mocked(fetch).mock.calls[1][1]!.body as string)).toMatchObject(
+      { message: "hi" },
+    );
+  });
+
+  it("does not show a retry button before any error has occurred", async () => {
+    const user = userEvent.setup();
+    render(<ChatPanel />);
+    await openPanel(user);
+
+    expect(screen.queryByText("Retry")).not.toBeInTheDocument();
   });
 });
 

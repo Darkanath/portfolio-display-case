@@ -89,12 +89,12 @@ export default function PersonaSection() {
                                 </span>
                               )}
                               {item.blurb && (
-                                <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">
+                                <span className="block text-zinc-600 dark:text-zinc-500 mt-0.5">
                                   {item.blurb}
                                 </span>
                               )}
                               {item.note && (
-                                <span className="block text-zinc-400 dark:text-zinc-500 mt-0.5">
+                                <span className="block text-zinc-600 dark:text-zinc-500 mt-0.5">
                                   {item.note}
                                 </span>
                               )}
