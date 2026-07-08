@@ -29,7 +29,7 @@ jobs:
       image_tag: ${{ steps.meta.outputs.tag }}
       image_name: ${{ steps.image.outputs.name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set lowercase image name
         id: image
