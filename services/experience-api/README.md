@@ -36,6 +36,13 @@ CI/CD will build and deploy a new revision.
 
 The "schema" is the JSON file. The "migration" is the git commit.
 
+If a role has both `highlights` and `achievements`, keep `achievements[].text`
+mirroring the corresponding `highlights[]` entry — `achievements` adds
+`tags`/`metric` for the CV-tailoring feature in `agent-api`, but the two
+arrays should still agree on content. A test asserts they stay in sync; see
+[`services/agent-api/docs/cv-tailoring.md`](../agent-api/docs/cv-tailoring.md)
+for why this duplication exists.
+
 ## Testing
 
 Unit and integration tests live in `tests/experience-api/ExperienceApi.Tests/`
