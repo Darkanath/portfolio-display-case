@@ -19,6 +19,7 @@ and the source of truth for CV data.
 | GET | `/api/v1/profile` | Name, tagline, summary |
 | GET | `/api/v1/experience` | Array of past and current roles |
 | GET | `/api/v1/skills` | Skills grouped by category |
+| GET | `/api/v1/military` | Military service entries |
 | GET | `/api/v1/cv-pdf` | Returns the CV as a downloadable PDF (when bundled) |
 
 ## Run locally

@@ -54,6 +54,21 @@ public class CvControllerTests
     }
 
     [Fact]
+    public void GetMilitaryService_ReturnsOkWithList()
+    {
+        var entries = new List<MilitaryServiceEntry>
+        {
+            new("Full service", "Home Front Command", "Communications & Computer Department")
+        };
+        _cvData.GetMilitaryService().Returns(entries);
+
+        var result = _sut.GetMilitaryService();
+
+        var ok = Assert.IsType<OkObjectResult>(result);
+        Assert.Same(entries, ok.Value);
+    }
+
+    [Fact]
     public void GetCvPdf_FileNotFound_ReturnsNotFound()
     {
         _cvData.GetPdfPath().Returns(Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".pdf"));

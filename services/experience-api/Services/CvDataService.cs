@@ -28,5 +28,6 @@ public sealed class CvDataService : ICvDataService
     public Profile GetProfile() => _cv.Profile;
     public IReadOnlyList<ExperienceEntry> GetExperience() => _cv.Experience;
     public Skills GetSkills() => _cv.Skills;
+    public IReadOnlyList<MilitaryServiceEntry> GetMilitaryService() => _cv.MilitaryService;
     public string GetPdfPath() => _pdfPath;
 }

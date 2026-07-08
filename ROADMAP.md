@@ -20,11 +20,11 @@ read:
 Open items from the old roadmap, unrelated to CV-tailoring but not yet done.
 Pick these up opportunistically; they don't block the milestones below.
 
-- [ ] Add smoke test step to each service's CI workflow: `curl /health` on
+- [x] Add smoke test step to each service's CI workflow: `curl /health` on
       the deployed app before marking the deploy green
-- [ ] Chat panel: add a retry button to the existing inline error state
-- [ ] Dependabot or Renovate for automated dependency updates
-- [ ] Military service section: add a `/military` endpoint to
+- [x] Chat panel: add a retry button to the existing inline error state
+- [x] Dependabot or Renovate for automated dependency updates
+- [x] Military service section: add a `/military` endpoint to
       `experience-api`, wire up a frontend section
 
 **Technical debt** (deferred by choice, not forgotten):

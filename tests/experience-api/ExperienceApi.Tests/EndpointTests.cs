@@ -125,6 +125,35 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
         }
     }
 
+    [Fact]
+    public async Task MilitaryService_ReturnsOk()
+    {
+        var resp = await _client.GetAsync("/api/v1/military");
+        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+    }
+
+    [Fact]
+    public async Task MilitaryService_ReturnsNonEmptyArray()
+    {
+        var resp = await _client.GetAsync("/api/v1/military");
+        var arr = await resp.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(JsonValueKind.Array, arr.ValueKind);
+        Assert.True(arr.GetArrayLength() > 0);
+    }
+
+    [Fact]
+    public async Task MilitaryService_EachItemHasRequiredFields()
+    {
+        var resp = await _client.GetAsync("/api/v1/military");
+        var arr = await resp.Content.ReadFromJsonAsync<JsonElement>();
+        foreach (var item in arr.EnumerateArray())
+        {
+            Assert.True(item.TryGetProperty("type", out _), "item missing 'type'");
+            Assert.True(item.TryGetProperty("unit", out _), "item missing 'unit'");
+            Assert.True(item.TryGetProperty("role", out _), "item missing 'role'");
+        }
+    }
+
     // --- Security headers ---
 
     [Theory]
@@ -141,6 +170,7 @@ public class EndpointTests(WebApplicationFactory<Program> factory)
     [InlineData("/api/v1/experience")]
     [InlineData("/api/v1/skills")]
     [InlineData("/api/v1/profile")]
+    [InlineData("/api/v1/military")]
     public async Task SecurityHeaders_PresentOnDataEndpoints(string path)
     {
         var resp = await _client.GetAsync(path);

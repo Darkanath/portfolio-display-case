@@ -5,5 +5,6 @@ public record CvDocument(
     ExperienceEntry[] Experience,
     Skills Skills,
     Education[] Education,
-    Language[] Languages
+    Language[] Languages,
+    MilitaryServiceEntry[] MilitaryService
 );

@@ -101,5 +101,17 @@
   "languages": [
     {"name": "Hebrew", "level": "Native"},
     {"name": "English", "level": "Native-level reading and writing"}
+  ],
+  "militaryService": [
+    {
+      "type": "Full service",
+      "unit": "Home Front Command",
+      "role": "Communications & Computer Department"
+    },
+    {
+      "type": "Military Reserves",
+      "unit": "Armor Division",
+      "role": "Communications in an Armored Infantry Unit"
+    }
   ]
 }

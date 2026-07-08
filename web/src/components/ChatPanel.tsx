@@ -41,6 +41,9 @@ export default function ChatPanel() {
   const [history, setHistory] = useState<ChatTurn[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(
+    null,
+  );
 
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const desktopToggleRef = useRef<HTMLButtonElement>(null);
@@ -78,17 +81,8 @@ export default function ChatPanel() {
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  const handleSend = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
-
-    setInput("");
-    if (textareaRef.current) textareaRef.current.style.height = "auto";
-
-    const userTurn: ChatTurn = { role: "user", content: text };
-    setMessages((prev) => [...prev, userTurn]);
+  const sendToAgent = async (text: string, userTurn: ChatTurn) => {
     setIsLoading(true);
-
     const historyForRequest = history.slice(-10);
 
     try {
@@ -106,6 +100,7 @@ export default function ChatPanel() {
           ...prev,
           { role: "assistant", content: msg, isError: true },
         ]);
+        setLastFailedMessage(text);
       } else {
         const data = (await resp.json()) as {
           reply: string;
@@ -126,15 +121,37 @@ export default function ChatPanel() {
             { role: "assistant" as const, content: data.reply },
           ].slice(-10),
         );
+        setLastFailedMessage(null);
       }
     } catch {
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: NETWORK_ERROR, isError: true },
       ]);
+      setLastFailedMessage(text);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || isLoading) return;
+
+    setInput("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    const userTurn: ChatTurn = { role: "user", content: text };
+    setMessages((prev) => [...prev, userTurn]);
+    await sendToAgent(text, userTurn);
+  };
+
+  const handleRetry = async () => {
+    if (!lastFailedMessage || isLoading) return;
+    const text = lastFailedMessage;
+    const userTurn: ChatTurn = { role: "user", content: text };
+    setMessages((prev) => prev.slice(0, -1));
+    await sendToAgent(text, userTurn);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -186,6 +203,8 @@ export default function ChatPanel() {
             isLoading={isLoading}
             messagesEndRef={messagesEndRef}
             onSuggestionClick={handleSuggestionClick}
+            canRetry={!!lastFailedMessage}
+            onRetry={() => void handleRetry()}
           />
           <InputArea
             input={input}
@@ -229,6 +248,8 @@ export default function ChatPanel() {
             isLoading={isLoading}
             messagesEndRef={messagesEndRef}
             onSuggestionClick={handleSuggestionClick}
+            canRetry={!!lastFailedMessage}
+            onRetry={() => void handleRetry()}
           />
           <InputArea
             input={input}
@@ -269,11 +290,15 @@ function MessageList({
   isLoading,
   messagesEndRef,
   onSuggestionClick,
+  canRetry,
+  onRetry,
 }: {
   messages: DisplayMessage[];
   isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   onSuggestionClick: (text: string) => void;
+  canRetry: boolean;
+  onRetry: () => void;
 }) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
@@ -336,6 +361,17 @@ function MessageList({
                 <p className="mt-1.5 mono text-[10px] text-zinc-600 dark:text-zinc-400">
                   via {msg.tools_used.join(", ")}
                 </p>
+              )}
+            {msg.isError &&
+              canRetry &&
+              !isLoading &&
+              i === messages.length - 1 && (
+                <button
+                  onClick={onRetry}
+                  className="mt-1.5 block mono text-[10px] uppercase tracking-widest text-accent-600 dark:text-accent-400 hover:underline"
+                >
+                  Retry
+                </button>
               )}
           </div>
         </div>
