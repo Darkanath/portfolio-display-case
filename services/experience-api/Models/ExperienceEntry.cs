@@ -8,5 +8,6 @@ public record ExperienceEntry(
     string? End,
     bool Current,
     string[] Highlights,
-    string[] Stack
+    string[] Stack,
+    Achievement[]? Achievements = null
 );

@@ -101,4 +101,31 @@ public class CvDataServiceTests
         Assert.True(Path.IsPathRooted(path));
         Assert.EndsWith("cv.pdf", path);
     }
+
+    [Fact]
+    public void GetExperience_EveryRoleHasAchievements()
+    {
+        // Milestone 2 backfilled achievements for all existing roles; this guards
+        // against a new role being added without them.
+        foreach (var entry in _sut.GetExperience())
+        {
+            Assert.NotNull(entry.Achievements);
+            Assert.NotEmpty(entry.Achievements!);
+        }
+    }
+
+    [Fact]
+    public void GetExperience_AchievementTextsMirrorHighlights()
+    {
+        // achievements[].text intentionally duplicates highlights[]; the two must
+        // stay in sync per role. See services/agent-api/docs/cv-tailoring.md.
+        foreach (var entry in _sut.GetExperience())
+        {
+            if (entry.Achievements is null)
+                continue;
+            Assert.Equal(
+                entry.Highlights.ToHashSet(),
+                entry.Achievements.Select(a => a.Text).ToHashSet());
+        }
+    }
 }

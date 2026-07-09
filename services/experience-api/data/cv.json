@@ -18,12 +18,58 @@
         "Led architecture and hands-on development of a healthcare workforce-management and payroll web platform.",
         "Translated product and business requirements into architecture designs that are cloud-native, covering both functional and non-functional requirements such as performance, availability, security, and compliance.",
         "Re-platformed a legacy monolith into a distributed-monolith architecture on Azure for 10,000 concurrent users, elastic to 35,000 and 300,000 active at peak, with SOC2 Type 2 PII protection across multi-tenant Azure SQL.",
-        "Led a team of cross-funtioning 11 developers and devops engineers, owning hirind and mentoring, using daily agile rituals.",
-        "Helm another  project  in BI, leading a team of 4 data engineers and data scientists.",
-        "Introduced LLM coding agents for code reviews, testing and documentation, lifting sprint velocity by 50% for 2-weeks sprints.",
+        "Led a team of cross-functioning 11 developers and devops engineers, owning hiring and mentoring, using daily agile rituals.",
+        "Helmed a BI project with a team of 4 data engineers and data scientists.",
+        "Introduced LLM coding agents for code reviews, testing and documentation, lifting sprint velocity by 50% for 2-week sprints.",
 "Containerized services with Docker on Azure Container Apps.", "Designed BI pipelining for ingesting into Microsoft Fabric and Apache Iceberg, utilizing Snowflake in a medallion architecture.", "Modernized the system to include high-availability, strong resiliency and fault-tolerant services.", "Hands-on experience with agentic AI coding tools such as Claude Code, Google Antigravity, and Windsurf."
       ],
-      "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions", "Claude Code", "Google Antigravity", "Jira", "Healthcare", "Azure SQL"]
+      "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions", "Claude Code", "Google Antigravity", "Jira", "Healthcare", "Azure SQL"],
+      "achievements": [
+        {
+          "text": "Led architecture and hands-on development of a healthcare workforce-management and payroll web platform.",
+          "tags": ["architecture", "leadership", "healthcare", "full-stack"]
+        },
+        {
+          "text": "Translated product and business requirements into architecture designs that are cloud-native, covering both functional and non-functional requirements such as performance, availability, security, and compliance.",
+          "tags": ["architecture", "cloud-native", "requirements", "security"]
+        },
+        {
+          "text": "Re-platformed a legacy monolith into a distributed-monolith architecture on Azure for 10,000 concurrent users, elastic to 35,000 and 300,000 active at peak, with SOC2 Type 2 PII protection across multi-tenant Azure SQL.",
+          "tags": ["modernization", "azure", "scalability", "security", "multi-tenant"],
+          "metric": "10,000 concurrent users, elastic to 35,000 and 300,000 active at peak"
+        },
+        {
+          "text": "Led a team of cross-functioning 11 developers and devops engineers, owning hiring and mentoring, using daily agile rituals.",
+          "tags": ["leadership", "team-building", "hiring", "agile", "mentoring"],
+          "metric": "11 developers and devops engineers"
+        },
+        {
+          "text": "Helmed a BI project with a team of 4 data engineers and data scientists.",
+          "tags": ["leadership", "bi", "data"],
+          "metric": "4 data engineers and data scientists"
+        },
+        {
+          "text": "Introduced LLM coding agents for code reviews, testing and documentation, lifting sprint velocity by 50% for 2-week sprints.",
+          "tags": ["ai", "productivity", "agile", "developer-experience"],
+          "metric": "50% sprint velocity increase"
+        },
+        {
+          "text": "Containerized services with Docker on Azure Container Apps.",
+          "tags": ["docker", "azure", "containers"]
+        },
+        {
+          "text": "Designed BI pipelining for ingesting into Microsoft Fabric and Apache Iceberg, utilizing Snowflake in a medallion architecture.",
+          "tags": ["bi", "data-engineering", "snowflake", "fabric"]
+        },
+        {
+          "text": "Modernized the system to include high-availability, strong resiliency and fault-tolerant services.",
+          "tags": ["reliability", "architecture", "resiliency"]
+        },
+        {
+          "text": "Hands-on experience with agentic AI coding tools such as Claude Code, Google Antigravity, and Windsurf.",
+          "tags": ["ai", "tools", "developer-experience"]
+        }
+      ]
     },
     {
       "id": "pra-group",
@@ -38,7 +84,26 @@
         "Led B2B projects enabling interfaces and reports between businesses, built on Microsoft Azure",
         "Modernized WCF-based services with gRPC and Protocol Buffers, cutting network latency and payload size, enabling native streaming for terminal clients across Linux, macOS, and Windows."
       ],
-      "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps", "RESTFul API", "B2B", "Fintech", "Azure SQL", "WCF", "Blob Storage"]
+      "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps", "RESTFul API", "B2B", "Fintech", "Azure SQL", "WCF", "Blob Storage"],
+      "achievements": [
+        {
+          "text": "Led migration of fintech systems for cloud-native architecture in .NET Core targeting scalability, and maintainability.",
+          "tags": ["migration", "cloud-native", "fintech", "dotnet"]
+        },
+        {
+          "text": "Helped to cut annual services cost from $2M to roughly $17K ($12K setup plus $400/month) by re-architecting a project onto Azure Blob Storage and Container Apps behind RESTFul API.",
+          "tags": ["cost-optimization", "azure", "architecture", "fintech"],
+          "metric": "cut annual cost from $2M to roughly $17K"
+        },
+        {
+          "text": "Led B2B projects enabling interfaces and reports between businesses, built on Microsoft Azure",
+          "tags": ["b2b", "integration", "azure", "leadership"]
+        },
+        {
+          "text": "Modernized WCF-based services with gRPC and Protocol Buffers, cutting network latency and payload size, enabling native streaming for terminal clients across Linux, macOS, and Windows.",
+          "tags": ["modernization", "grpc", "performance", "cross-platform"]
+        }
+      ]
     },
     {
       "id": "secure-islands",
@@ -52,7 +117,22 @@
         "Led a 4-member development team using Agile-Scrum methodology",
         "Developed and defined the system in .NET 4.0, utilizing WPF, WCF Services, and SQL Server 2008, to streamline security processes and improve customer service"
       ],
-      "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS", "BI", "SSRS", "Agile"]
+      "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS", "BI", "SSRS", "Agile"],
+      "achievements": [
+        {
+          "text": "Managed a Data Loss Prevention (DLP) security product, including Business Intelligence solutions for large organizations on Microsoft SSAS",
+          "tags": ["security", "dlp", "bi", "product"]
+        },
+        {
+          "text": "Led a 4-member development team using Agile-Scrum methodology",
+          "tags": ["leadership", "agile", "team-building"],
+          "metric": "4-member development team"
+        },
+        {
+          "text": "Developed and defined the system in .NET 4.0, utilizing WPF, WCF Services, and SQL Server 2008, to streamline security processes and improve customer service",
+          "tags": ["dotnet", "wpf", "wcf", "security"]
+        }
+      ]
     },
     {
       "id": "ness",
@@ -65,7 +145,18 @@
         "Led a development project for the Ministry of Housing, managing a cross-functioning team of 8 (4 developers, 2 system analysts, 2 QA personnel), aiming to enhance the organizational information system",
         "Designed and implemented solutions with .NET 3.5, BizTalk, and SQL Server, contributing to greater organizational efficiency"
       ],
-      "stack": [".NET 3.5", "BizTalk", "SQL Server"]
+      "stack": [".NET 3.5", "BizTalk", "SQL Server"],
+      "achievements": [
+        {
+          "text": "Led a development project for the Ministry of Housing, managing a cross-functioning team of 8 (4 developers, 2 system analysts, 2 QA personnel), aiming to enhance the organizational information system",
+          "tags": ["leadership", "government", "team-building"],
+          "metric": "team of 8 (4 developers, 2 system analysts, 2 QA personnel)"
+        },
+        {
+          "text": "Designed and implemented solutions with .NET 3.5, BizTalk, and SQL Server, contributing to greater organizational efficiency",
+          "tags": ["dotnet", "biztalk", "integration"]
+        }
+      ]
     },
     {
       "id": "anyclip",
@@ -77,7 +168,14 @@
       "highlights": [
         "Led a full-stack 9-person team, building an application and website with social-platforms integrations, using WPF and ASP.NET"
       ],
-      "stack": ["WPF", "ASP.NET MVC", "JavaScript", "Facebook", "Messaging"]
+      "stack": ["WPF", "ASP.NET MVC", "JavaScript", "Facebook", "Messaging"],
+      "achievements": [
+        {
+          "text": "Led a full-stack 9-person team, building an application and website with social-platforms integrations, using WPF and ASP.NET",
+          "tags": ["leadership", "full-stack", "team-building", "social"],
+          "metric": "9-person team"
+        }
+      ]
     }
   ],
   "skills": {
