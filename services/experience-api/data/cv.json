@@ -2,27 +2,28 @@
   "profile": {
     "name": "Tal Shterzer",
     "tagline": "Engineering Manager & Systems Architect",
-    "summary": "Highly technical Engineering Manager and Systems Architect with 17+ years of progressive leadership, specializing in complex cloud migrations, enterprise modernization, and AI-driven product initiatives. Expert in translating business objectives into scalable technical roadmaps, establishing high-performance Agile cultures, and integrating AI Agents and LLM-powered automation to accelerate developer productivity and product quality. Deep expertise across Microsoft Azure, cloud-native architecture, and full-stack engineering. Drives technical excellence from strategic definition to code-level execution.",
+    "summary": "A hands-on systems architect and engineering manager with 17+ years building large-scale enterprise platforms and leading cloud-native modernization. Designs high-performance distributed systems on Azure, using well-known design patterns, containerization, and integrating AI coding agents into the development lifecycle. Builds and runs agile teams that ship secure, scalable products from architecture through code.",
     "location": "Israel",
     "yearsOfExperience": 17
   },
   "experience": [
     {
       "id": "smartlinx",
-      "title": "Development Manager",
+      "title": "Hands-On Development Manager & Cloud Architect",
       "company": "SmartLinx Solutions",
       "start": "2025-01",
       "end": "2026-06",
       "current": false,
       "highlights": [
-        "Led, mentored, and coached an 11-engineer squad; own hiring, performance reviews, and career-development roadmaps; introduced Agile rituals, pair-programming, and structured mentoring for junior hires",
-        "Modernized and re-platformed a legacy on-prem monolith into a distributed cloud architecture on Microsoft Azure using .NET Core C# and React",
-        "Engineered a fully containerized ecosystem using Docker for independent, scalable deployment via Azure Container Apps",
-        "Orchestrated CI/CD pipelines from GitHub repositories to Microsoft Azure using GitHub Actions",
-        "Helmed a comprehensive BI and big-data solution, leading a cross-functional team of 4 Data Engineers and Scientists; migrated OLTP databases on Azure SQL to Snowflake OLAP via OneLake (Microsoft Fabric) and Apache Iceberg",
-        "Championed adoption of AI Agents across the development workflow, integrating LLM-powered coding agents (GitHub Copilot, Claude Code) to automate code reviews, test generation, and documentation; reduced manual overhead and improved sprint velocity"
+        "Led architecture and hands-on development of a healthcare workforce-management and payroll web platform.",
+        "Translated product and business requirements into architecture designs that are cloud-native, covering both functional and non-functional requirements such as performance, availability, security, and compliance.",
+        "Re-platformed a legacy monolith into a distributed-monolith architecture on Azure for 10,000 concurrent users, elastic to 35,000 and 300,000 active at peak, with SOC2 Type 2 PII protection across multi-tenant Azure SQL.",
+        "Led a team of cross-funtioning 11 developers and devops engineers, owning hirind and mentoring, using daily agile rituals.",
+        "Helm another  project  in BI, leading a team of 4 data engineers and data scientists.",
+        "Introduced LLM coding agents for code reviews, testing and documentation, lifting sprint velocity by 50% for 2-weeks sprints.",
+"Containerized services with Docker on Azure Container Apps.", "Designed BI pipelining for ingesting into Microsoft Fabric and Apache Iceberg, utilizing Snowflake in a medallion architecture.", "Modernized the system to include high-availability, strong resiliency and fault-tolerant services.", "Hands-on experience with agentic AI coding tools such as Claude Code, Google Antigravity, and Windsurf."
       ],
-      "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions"]
+      "stack": [".NET Core", "C#", "React", "Azure Container Apps", "Microsoft Fabric", "Snowflake", "GitHub Actions", "Claude Code", "Google Antigravity", "Jira", "Healthcare", "Azure SQL"]
     },
     {
       "id": "pra-group",
@@ -32,12 +33,12 @@
       "end": "2024-12",
       "current": false,
       "highlights": [
-        "Led a document-retrieval platform for company employees to search and retrieve customer account documents, including a Web API for integrating new document types and specialized source applications, on .NET 8.0",
-        "Designed, developed, and deployed software through Azure DevOps and GitHub",
-        "Led a Business-to-Business (B2B) project enabling download and upload of reports between businesses, built on .NET 8.0 and Microsoft Azure",
-        "Modernized systems by transitioning to Microservices with gRPC, Protocol Buffers, and .NET 8.0, resulting in significant improvement in system efficiency and reliability"
+        "Led migration of fintech systems for cloud-native architecture in .NET Core targeting scalability, and maintainability.",
+        "Helped to cut annual services cost from $2M to roughly $17K ($12K setup plus $400/month) by re-architecting a project onto Azure Blob Storage and Container Apps behind RESTFul API.",
+        "Led B2B projects enabling interfaces and reports between businesses, built on Microsoft Azure",
+        "Modernized WCF-based services with gRPC and Protocol Buffers, cutting network latency and payload size, enabling native streaming for terminal clients across Linux, macOS, and Windows."
       ],
-      "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps"]
+      "stack": [".NET 8", "C#", "Azure", "gRPC", "Protocol Buffers", "Azure DevOps", "RESTFul API", "B2B", "Fintech", "Azure SQL", "WCF", "Blob Storage"]
     },
     {
       "id": "secure-islands",
@@ -51,7 +52,7 @@
         "Led a 4-member development team using Agile-Scrum methodology",
         "Developed and defined the system in .NET 4.0, utilizing WPF, WCF Services, and SQL Server 2008, to streamline security processes and improve customer service"
       ],
-      "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS"]
+      "stack": [".NET 4", "WPF", "WCF", "SQL Server", "SSAS", "BI", "SSRS", "Agile"]
     },
     {
       "id": "ness",
@@ -61,7 +62,7 @@
       "end": "2009",
       "current": false,
       "highlights": [
-        "Led a development project for the Ministry of Housing, managing a team of 8 (4 developers, 2 system analysts, 2 QA personnel), aiming to enhance the organizational information system",
+        "Led a development project for the Ministry of Housing, managing a cross-functioning team of 8 (4 developers, 2 system analysts, 2 QA personnel), aiming to enhance the organizational information system",
         "Designed and implemented solutions with .NET 3.5, BizTalk, and SQL Server, contributing to greater organizational efficiency"
       ],
       "stack": [".NET 3.5", "BizTalk", "SQL Server"]
@@ -74,19 +75,18 @@
       "end": "2009",
       "current": false,
       "highlights": [
-        "Managed a development team of 9, leading development of a desktop application and website projects with emphasis on integrations with social networks including Facebook",
-        "Led development of various services using WPF, ASP.NET MVC, and JavaScript, leading to increased user satisfaction and expanded application usage"
+        "Led a full-stack 9-person team, building an application and website with social-platforms integrations, using WPF and ASP.NET"
       ],
-      "stack": ["WPF", "ASP.NET MVC", "JavaScript"]
+      "stack": ["WPF", "ASP.NET MVC", "JavaScript", "Facebook", "Messaging"]
     }
   ],
   "skills": {
-    "languages": ["C#", "C++", ".NET (Framework, Core, .NET 8/10)", "TypeScript", "Python"],
-    "cloud": ["Microsoft Azure", "Azure Container Apps", "Azure Data Factory", "Microsoft Fabric"],
-    "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "MongoDB", "CosmosDB"],
-    "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM Tool-Calling", "Prompt Engineering", "MCP Servers"],
-    "leadership": ["Team Building", "Hiring", "Performance Management", "Technical Roadmapping", "Agile/Scrum"],
-    "practices": ["Microservices", "Containerization (Docker)", "CI/CD (GitHub Actions)", "PCI-DSS"]
+    "languages": ["C#", "C++", ".NET", "TypeScript", "Python"],
+    "cloud": ["Microsoft Azure", "Azure Container Apps", "Azure Data Factory", "Microsoft Fabric", "Data Lakes"],
+    "data": ["SQL Server", "Oracle", "OLTP", "OLAP", "Snowflake", "Apache Iceberg", "Delta Tables", "NoSQL", "Redis"],
+    "ai": ["Claude Code", "GitHub Copilot", "Windsurf", "LLM Tool-Calling", "Prompt Engineering", "MCP Servers", "RAG planning", "Antigravity"],
+    "leadership": ["Team Building", "Hiring", "Performance Management", "Technical Roadmapping", "Agile/Scrum", "Mentoring"],
+    "practices": ["Microservices", "Docker/Kubernetes", "CI/CD", "PCI-DSS", "SOC 2 Type 2", "HIPAA"]
   },
   "education": [
     {
