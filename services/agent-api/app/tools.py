@@ -117,6 +117,15 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
                 r = await client.get(f"{EXPERIENCE_API_URL}/api/v1/experience")
                 r.raise_for_status()
                 experience = r.json()
+                # `achievements` is authored only for the CV-tailoring flow
+                # (get_experience_for_tailoring). Strip it here so it never rides
+                # along into the chat context — this tool's payload and the outer
+                # chat's truncation budget must stay exactly as they were before
+                # the field existed.
+                experience = [
+                    {k: v for k, v in role.items() if k != "achievements"}
+                    for role in experience
+                ]
                 company = (tool_input.get("company") or "").lower().strip()
                 if company:
                     experience = [

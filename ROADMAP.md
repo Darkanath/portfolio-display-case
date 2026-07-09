@@ -42,15 +42,15 @@ Pick these up opportunistically; they don't block the milestones below.
 
 ## Milestone 2 — experience-api: achievement metadata
 
-- [ ] Add `Achievement` record (`Text`, `Tags: string[]`, `Metric: string?`)
+- [x] Add `Achievement` record (`Text`, `Tags: string[]`, `Metric: string?`)
       and a new nullable `Achievements` array on `ExperienceEntry`,
       alongside the untouched `Highlights`/`Stack`
-- [ ] Backfill `achievements` for all 5 existing roles in `cv.json`,
+- [x] Backfill `achievements` for all 5 existing roles in `cv.json`,
       `text` mirroring the corresponding `highlights` entry
-- [ ] Strip `achievements` from what the existing `get_work_experience` tool
+- [x] Strip `achievements` from what the existing `get_work_experience` tool
       forwards to Claude — its 8000-char budget and behavior must not change
-- [ ] Test: `achievements[].text` set matches `highlights[]` set, per role
-- [ ] Bump `Service.Version` in `appsettings.json`
+- [x] Test: `achievements[].text` set matches `highlights[]` set, per role
+- [x] Bump `Service.Version` in `appsettings.json`
 
 **Acceptance:** existing `/api/v1/experience` consumers (frontend,
 `get_work_experience`) are byte-identical in behavior; new field is present

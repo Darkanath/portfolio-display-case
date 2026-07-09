@@ -65,6 +65,50 @@ async def test_get_persona_topic_all_bypasses_encoding():
 
 
 @pytest.mark.asyncio
+async def test_get_work_experience_strips_achievements():
+    """`achievements` is authored for the CV-tailoring tool only. It must never
+    ride along in get_work_experience's payload (keeps the chat context and its
+    truncation budget unchanged)."""
+    from app.tools import dispatch
+
+    roles = [
+        {
+            "id": "smartlinx",
+            "company": "SmartLinx Solutions",
+            "highlights": ["Did a thing"],
+            "stack": ["C#"],
+            "achievements": [{"text": "Did a thing", "tags": ["x"], "metric": None}],
+        }
+    ]
+    ctx, _ = _make_http_ctx(json_data=roles)
+    with patch("app.tools.httpx.AsyncClient", return_value=ctx):
+        result = await dispatch("get_work_experience", {})
+
+    assert result["experience"], "expected at least one role"
+    for role in result["experience"]:
+        assert "achievements" not in role
+    # Untouched fields survive the strip.
+    assert result["experience"][0]["highlights"] == ["Did a thing"]
+    assert result["experience"][0]["stack"] == ["C#"]
+
+
+@pytest.mark.asyncio
+async def test_get_work_experience_filters_by_company():
+    """The company filter still works after the achievements strip."""
+    from app.tools import dispatch
+
+    roles = [
+        {"id": "a", "company": "SmartLinx Solutions", "highlights": [], "stack": []},
+        {"id": "b", "company": "PRA Group", "highlights": [], "stack": []},
+    ]
+    ctx, _ = _make_http_ctx(json_data=roles)
+    with patch("app.tools.httpx.AsyncClient", return_value=ctx):
+        result = await dispatch("get_work_experience", {"company": "smartlinx"})
+
+    assert [r["id"] for r in result["experience"]] == ["a"]
+
+
+@pytest.mark.asyncio
 async def test_unknown_tool_returns_error_dict():
     """An unrecognised tool name returns a structured error, not an exception."""
     from app.tools import dispatch
