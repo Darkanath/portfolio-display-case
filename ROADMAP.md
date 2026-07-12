@@ -58,17 +58,18 @@ and only reachable by new code.
 
 ## Milestone 3 — agent-api: tailor step
 
-- [ ] New `app/cv_tailor.py`: `TailoredHighlight` / `TailoredRole` /
+- [x] New `app/cv_tailor.py`: `TailoredHighlight` / `TailoredRole` /
       `TailoredCV` pydantic contract, `TAILOR_SYSTEM_PROMPT`, second
       independent Claude call
-- [ ] `job_description` wrapped in `<job_description>` tags with an explicit
-      untrusted-data instruction; `maxLength` set in the tool's input schema
-- [ ] Mechanical validation, all four gates in order: existence,
+- [x] `job_description` wrapped in `<job_description>` tags with an explicit
+      untrusted-data instruction; `JOB_DESCRIPTION_MAX_CHARS` bound enforced in
+      code now (the tool's `input_schema` `maxLength` lands with M5's registration)
+- [x] Mechanical validation, all four gates in order: existence,
       text-fidelity (`TEXT_FIDELITY_THRESHOLD = 0.6`), numeric-fidelity,
       structural cap (`MAX_HIGHLIGHTS_PER_ROLE = 4`, `MAX_TOTAL_HIGHLIGHTS = 12`)
-- [ ] Test: all four gates, independently and in combination — this is the
+- [x] Test: all four gates, independently and in combination — this is the
       feature's actual correctness surface
-- [ ] Test: `TAILOR_SYSTEM_PROMPT` guardrail-phrase assertions (mirrors
+- [x] Test: `TAILOR_SYSTEM_PROMPT` guardrail-phrase assertions (mirrors
       `TestSystemPrompt`)
 
 **Acceptance:** a tailor response that cites a real source but distorts,
