@@ -89,23 +89,24 @@ inflates, or over-collects it is rejected before it ever reaches render.
 
 ## Milestone 5 — agent-api: delivery & rate limiting
 
-- [ ] `generate_tailored_cv` tool registered in `TOOLS`/`dispatch()`
+- [x] `generate_tailored_cv` tool registered in `TOOLS`/`dispatch()`
       (`target_role`, `job_description` both required, empty string allowed)
-- [ ] In-memory token store; `GET /cv/tailored/{token}` claims atomically
-      (`dict.pop` before any `await`), 404 if already gone or expired
-      (`DOWNLOAD_TTL_SECONDS`, default 10 min, lazy expiry check)
-- [ ] File cleanup via `BackgroundTasks` after response streams
-- [ ] Tool-specific sliding-window rate limit: `TAILOR_RATE_LIMIT`
+- [x] In-memory token store; `GET /cv/tailored/{token}` claims atomically
+      (`dict.pop` before any `await` via `claim_download`), 404 if already gone or
+      expired (`DOWNLOAD_TTL_SECONDS`, default 10 min, lazy expiry check)
+- [x] File cleanup via `BackgroundTask` after response streams
+- [x] Tool-specific sliding-window rate limit: `TAILOR_RATE_LIMIT`
       (default 3/hour per IP), independent of `/chat`'s existing `slowapi` limit
-- [ ] Route-level `slowapi` limit on the download endpoint (20/hour per IP)
-- [ ] `ChatResponse.download_url` field, populated from the tool result
-- [ ] Confirm `agent-api`'s Container App is pinned to `maxReplicas: 1` in
-      `infra/terraform/` (both new stores are single-process, in-memory)
-- [ ] Bump `SERVICE_VERSION` in `main.py`
-- [ ] Test: token lifecycle (single fetch, second fetch 404s, expired fetch
-      404s and cleans up, two-near-simultaneous-requests race)
-- [ ] Test: sliding-window rate limiter with mocked `time.time()`
-- [ ] Test: `dispatch()` orchestration with mocked Claude/render calls —
+- [x] Route-level `slowapi` limit on the download endpoint (20/hour per IP)
+- [x] `ChatResponse.download_url` field, populated from the tool result
+      (raw token never fed back to Claude)
+- [x] Confirm `agent-api`'s Container App is pinned to `maxReplicas: 1` in
+      `infra/terraform/` — **was `2`, corrected to `1` for agent-api only**
+- [x] Bump `SERVICE_VERSION` in `main.py` (1.0.2 → 1.1.0)
+- [x] Test: token lifecycle (single fetch, second fetch 404s, expired fetch
+      404s and cleans up, single-claim race)
+- [x] Test: sliding-window rate limiter with mocked `time.time()`
+- [x] Test: `dispatch()` orchestration with mocked Claude/render calls —
       success path returns `download_token`; any gate failure or
       experience-api outage returns a clean `{"error": ...}`
 

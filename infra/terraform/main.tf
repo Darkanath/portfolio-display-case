@@ -109,7 +109,11 @@ resource "azurerm_container_app" "service" {
 
   template {
     min_replicas = 0
-    max_replicas = 2
+    # agent-api must stay single-instance: its CV-tailoring download-token store
+    # and per-IP tailor rate limiter are per-process, in-memory state. A token
+    # minted on one replica would 404 on another, and the counter could be
+    # bypassed across replicas. See services/agent-api/docs/cv-tailoring.md.
+    max_replicas = each.key == "agent-api" ? 1 : 2
 
     container {
       name   = each.key
