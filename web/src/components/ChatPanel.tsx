@@ -11,6 +11,9 @@ type DisplayMessage = {
   role: "user" | "assistant";
   content: string;
   tools_used?: string[];
+  // Relative path on the agent API (e.g. "/cv/tailored/<token>") when a tailored
+  // CV was generated. Rendered as an absolute download link against API.agent.
+  download_url?: string | null;
   isError?: boolean;
 };
 
@@ -152,6 +155,7 @@ export default function ChatPanel() {
         const data = (await resp.json()) as {
           reply: string;
           tools_used: string[];
+          download_url?: string | null;
         };
         setMessages((prev) => [
           ...prev,
@@ -159,6 +163,7 @@ export default function ChatPanel() {
             role: "assistant",
             content: data.reply,
             tools_used: data.tools_used,
+            download_url: data.download_url,
           },
         ]);
         setHistory((prev) =>
@@ -406,6 +411,16 @@ function MessageList({
             ) : (
               msg.content
             )}
+            {!msg.isError && msg.role === "assistant" && msg.download_url && (
+              <a
+                href={`${API.agent}${msg.download_url}`}
+                download
+                className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-accent-600/60 px-2.5 py-1.5 text-xs font-medium text-accent-700 dark:text-accent-400 hover:bg-accent-600/10 transition-colors"
+              >
+                <DownloadIcon />
+                Download tailored CV
+              </a>
+            )}
             {!msg.isError &&
               msg.role === "assistant" &&
               msg.tools_used &&
@@ -528,6 +543,27 @@ function CloseIcon() {
     >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }

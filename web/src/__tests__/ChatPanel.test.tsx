@@ -200,6 +200,70 @@ describe("ChatPanel — sending messages", () => {
   });
 });
 
+describe("ChatPanel — tailored CV download", () => {
+  it("renders a download link to the agent API when download_url is present", async () => {
+    const user = userEvent.setup();
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          reply: "Here is your tailored CV.",
+          tools_used: ["generate_tailored_cv"],
+          download_url: "/cv/tailored/abc123",
+        }),
+    } as Response);
+
+    render(<ChatPanel />);
+    await openPanel(user);
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "tailor a CV for staff engineer",
+    );
+    await user.keyboard("{Enter}");
+
+    await waitFor(() =>
+      expect(
+        screen.getAllByText("Here is your tailored CV.").length,
+      ).toBeGreaterThan(0),
+    );
+
+    const links = screen.getAllByRole("link", {
+      name: /download tailored cv/i,
+    });
+    expect(links.length).toBeGreaterThan(0);
+    // Absolute URL against the agent API base, not the frontend origin.
+    expect(links[0]).toHaveAttribute(
+      "href",
+      "http://localhost:5003/cv/tailored/abc123",
+    );
+    expect(links[0]).toHaveAttribute("download");
+  });
+
+  it("does not render a download link when download_url is absent", async () => {
+    const user = userEvent.setup();
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({ reply: "Just a chat reply.", tools_used: [] }),
+    } as Response);
+
+    render(<ChatPanel />);
+    await openPanel(user);
+    await user.type(
+      screen.getAllByPlaceholderText("Ask anything about Tal…")[0],
+      "hi",
+    );
+    await user.keyboard("{Enter}");
+
+    await waitFor(() =>
+      expect(screen.getAllByText("Just a chat reply.").length).toBeGreaterThan(0),
+    );
+    expect(
+      screen.queryByRole("link", { name: /download tailored cv/i }),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe("ChatPanel — error handling", () => {
   it("shows 429 error message inline", async () => {
     const user = userEvent.setup();

@@ -116,11 +116,13 @@ operation.
 
 ## Milestone 6 — frontend wiring
 
-- [ ] `ChatPanel.tsx`: render `download_url` as a plain `<a href download>`
-      when present on a response — no blob-fetch code needed
-- [ ] Test (or manual check): multi-turn slot-filling — turn 1 with missing
+- [x] `ChatPanel.tsx`: render `download_url` as a plain `<a href download>`
+      against `API.agent` when present on a response — no blob-fetch code needed
+- [x] Test (or manual check): multi-turn slot-filling — turn 1 with missing
       `job_description` gets a clarifying reply, not a tool call; turn 2,
-      with turn 1 in history, successfully calls the tool
+      with turn 1 in history, successfully calls the tool. Verified live against
+      the running stack (vague request → clarifying question, no tool call;
+      full request → `generate_tailored_cv` → working download link)
 
 **Acceptance:** an HR visitor can ask for a tailored CV in conversation,
 get asked for a job description if they didn't give one, and receive a
