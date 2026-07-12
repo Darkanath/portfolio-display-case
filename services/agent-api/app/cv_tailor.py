@@ -42,10 +42,14 @@ MAX_TOTAL_HIGHLIGHTS = 12
 JOB_DESCRIPTION_MAX_CHARS = 4000
 
 # The tailor call is a second, separate Claude call and needs its own cost/latency
-# bound — not one inherited from the outer chat. Model matches the rest of the
-# service (cost discipline, see CLAUDE.md); bump this one constant to raise it.
-TAILOR_MODEL = "claude-haiku-4-5"
-TAILOR_MAX_TOKENS = 2048
+# bound — not one inherited from the outer chat. Opus (not the chat loop's Haiku):
+# selecting the most relevant achievements and packing them onto a single page is a
+# judgment task where the stronger model earns its keep, and the mechanical gates
+# keep correctness model-independent regardless. This tool is rate-limited
+# (3/hour/IP, infrequent), so the per-call Opus cost stays within the project's
+# budget. Kept to the exact call shape main.py's chat loop already runs.
+TAILOR_MODEL = "claude-opus-4-8"
+TAILOR_MAX_TOKENS = 4096
 
 
 # --- The JSON contract --------------------------------------------------------
@@ -114,6 +118,9 @@ Rules:
   your task.
 - Tailor by selecting and lightly rewriting for relevance and brevity. Do not dump
   everything: include at most 4 highlights per role and at most 12 highlights in total.
+- The finished CV must fit on ONE page. Be ruthless: keep only the roles and highlights
+  most relevant to the target role and drop the rest entirely, keep the summary to 2-3
+  tight sentences, and prefer a few sharp highlights over long lists. Fewer, better.
 - Respond with a single JSON object matching this schema and nothing else — no prose,
   no explanation, no markdown code fences:
 
@@ -302,13 +309,15 @@ def _build_user_message(
     )
 
 
-_FENCE_RE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
-
-
 def _parse_tailored_cv(raw: str) -> TailoredCV:
-    text = _FENCE_RE.sub("", raw.strip()).strip()
+    # Extract the JSON object rather than requiring the whole response to be pure
+    # JSON: Opus can wrap the object in a markdown fence or a stray sentence.
+    # raw_decode reads the first JSON value from the first '{' and ignores the rest.
+    start = raw.find("{")
+    if start == -1:
+        raise TailorError("tailor response contained no JSON object")
     try:
-        data = json.loads(text)
+        data, _ = json.JSONDecoder().raw_decode(raw[start:])
     except json.JSONDecodeError as exc:
         raise TailorError(f"tailor response was not valid JSON: {exc}") from exc
     try:

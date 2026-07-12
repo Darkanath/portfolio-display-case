@@ -248,6 +248,9 @@ class TestTailorSystemPrompt:
         assert "json object" in lower
         assert "no markdown" in lower or "no prose" in lower
 
+    def test_requires_single_page(self):
+        assert "one page" in TAILOR_SYSTEM_PROMPT.lower()
+
 
 def _mock_client(json_text: str) -> MagicMock:
     block = SimpleNamespace(type="text", text=json_text)
@@ -300,6 +303,17 @@ class TestTailorCall:
 
     def test_strips_markdown_fences(self):
         client = _mock_client("```json\n" + _GOOD_RESPONSE + "\n```")
+        cv = tailor_cv(
+            client, target_role="Staff Engineer", job_description="",
+            source_roles=SOURCE, profile=PROFILE, contact=CONTACT,
+        )
+        assert cv.roles[0].id == "smartlinx"
+
+    def test_tolerates_prose_around_json(self):
+        """Opus 4.8 with thinking off can wrap the JSON in a stray sentence."""
+        client = _mock_client(
+            "Here's the tailored CV:\n\n" + _GOOD_RESPONSE + "\n\nLet me know if you'd like changes."
+        )
         cv = tailor_cv(
             client, target_role="Staff Engineer", job_description="",
             source_roles=SOURCE, profile=PROFILE, contact=CONTACT,
