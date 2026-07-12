@@ -10,6 +10,7 @@ dependencies = [
     "httpx>=0.28",
     "slowapi>=0.1.10",
     "pydantic>=2.9",
+    "docxtpl>=0.20.2",
 ]
 
 [dependency-groups]
