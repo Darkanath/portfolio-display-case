@@ -230,6 +230,17 @@ class TestGenerateTailoredCvDispatch:
         assert "error" in result
 
     @pytest.mark.asyncio
+    async def test_blank_target_role_does_not_consume_a_rate_slot(self):
+        ip = "9.9.9.14"
+        result = await dispatch(
+            "generate_tailored_cv",
+            {"target_role": "", "job_description": ""},
+            client_ip=ip,
+        )
+        assert "error" in result
+        assert tools._TAILOR_CALLS.get(ip, []) == []  # validated before rate-limiting
+
+    @pytest.mark.asyncio
     async def test_rate_limited_short_circuits_before_calling_claude(self):
         ip = "9.9.9.5"
         for _ in range(tools.TAILOR_RATE_LIMIT):

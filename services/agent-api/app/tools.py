@@ -295,14 +295,16 @@ async def dispatch(
                 }
 
             if tool_name == "generate_tailored_cv":
+                target_role = (tool_input.get("target_role") or "").strip()
+                if not target_role:
+                    return {"error": "A target role is required to tailor a CV."}
+                # Rate-limit only genuine attempts: a malformed request above never
+                # reaches Claude, so it must not burn one of the caller's slots.
                 if not _tailor_rate_ok(client_ip):
                     return {
                         "error": "Tailored-CV generation is rate limited (a few per hour). "
                         "Please try again later."
                     }
-                target_role = (tool_input.get("target_role") or "").strip()
-                if not target_role:
-                    return {"error": "A target role is required to tailor a CV."}
                 job_description = tool_input.get("job_description") or ""
 
                 # Full experience payload (with achievements) + profile + skills.

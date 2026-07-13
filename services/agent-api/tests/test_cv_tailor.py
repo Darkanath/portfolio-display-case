@@ -209,6 +209,17 @@ class TestNumericFidelityGate:
         with pytest.raises(TailorError, match="number absent from the source"):
             validate_tailored_cv(cv, SOURCE)
 
+    def test_fabricated_number_that_is_a_substring_of_a_real_one_rejected(self):
+        """Whole-number match, not substring containment: a fabricated '1000' must
+        not ride along inside the real '10,000'. The text stays faithful to the
+        source achievement so gate 2 passes and gate 3 is the one under test."""
+        cv = _valid_cv()
+        cv.roles[0].highlights[0].text = (
+            "Re-platformed a legacy monolith onto Azure for 1000 concurrent users."
+        )
+        with pytest.raises(TailorError, match="number absent from the source"):
+            validate_tailored_cv(cv, SOURCE)
+
 
 class TestStructuralCapGate:
     def test_too_many_highlights_in_one_role_rejected(self):
@@ -261,6 +272,11 @@ class TestTailorSystemPrompt:
 
     def test_requires_single_page(self):
         assert "one page" in TAILOR_SYSTEM_PROMPT.lower()
+
+    def test_skills_must_be_verbatim(self):
+        lower = TAILOR_SYSTEM_PROMPT.lower()
+        assert "skills" in lower
+        assert "verbatim" in lower
 
 
 class TestBuildFullCv:
@@ -370,6 +386,30 @@ class TestTailorCall:
             source_roles=SOURCE, profile=PROFILE, contact=CONTACT,
         )
         assert cv.roles[0].id == "smartlinx"
+
+    def test_fabricated_skill_is_filtered_out(self):
+        import json as _json
+        data = _json.loads(_GOOD_RESPONSE)
+        data["skills"] = ["C#", "Rust", "Azure"]  # Rust is not a real skill
+        client = _mock_client(_json.dumps(data))
+        cv = tailor_cv(
+            client, target_role="Staff Engineer", job_description="",
+            source_roles=SOURCE, profile=PROFILE, contact=CONTACT,
+            skills={"languages": ["C#"], "cloud": ["Azure"]},
+        )
+        assert cv.skills == ["C#", "Azure"]  # real ones kept in order, Rust dropped
+
+    def test_stack_only_skill_is_kept(self):
+        import json as _json
+        data = _json.loads(_GOOD_RESPONSE)
+        data["skills"] = ["React"]  # only in smartlinx's stack, not the skills payload
+        client = _mock_client(_json.dumps(data))
+        cv = tailor_cv(
+            client, target_role="Staff Engineer", job_description="",
+            source_roles=SOURCE, profile=PROFILE, contact=CONTACT,
+            skills={"languages": ["C#"]},
+        )
+        assert cv.skills == ["React"]  # kept: it appears in a role's stack
 
     def test_non_json_output_raises_tailor_error(self):
         client = _mock_client("Sorry, I can't do that.")
