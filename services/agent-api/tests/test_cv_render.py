@@ -14,7 +14,7 @@ from docx import Document
 from docxtpl import DocxTemplate
 
 from app.cv_render import TEMPLATE_PATH, render_cv
-from app.cv_tailor import TailoredCV, TailoredHighlight, TailoredRole
+from app.cv_tailor import TailoredCV, TailoredHighlight, TailoredRole, build_full_cv
 
 
 def _fixture_cv() -> TailoredCV:
@@ -103,6 +103,29 @@ class TestRender:
                     os.remove(p)
                 except FileNotFoundError:
                     pass
+
+
+class TestFullCvRender:
+    def test_full_cv_renders_without_the_tailored_for_line(self):
+        cv = build_full_cv(
+            source_roles=[
+                {"id": "a", "title": "Architect", "company": "SmartLinx",
+                 "start": "2025-01", "end": "2026-06", "current": False,
+                 "stack": ["C#"], "highlights": ["Did X for 10,000 users."]},
+            ],
+            profile={"name": "Tal Shterzer", "tagline": "Engineering Manager",
+                     "summary": "17+ years."},
+            contact={"email": "shterzer@gmail.com", "linkedin": "https://linkedin.com/in/talshterzer"},
+            skills={"languages": ["C#"]},
+        )
+        path = render_cv(cv)
+        try:
+            text = _doc_text(path)
+            assert "Tailored for" not in text          # conditional line omitted
+            assert "Tal Shterzer" in text               # identity still renders
+            assert "Did X for 10,000 users." in text    # highlight rendered
+        finally:
+            os.remove(path)
 
 
 class TestPlaceholderDrift:

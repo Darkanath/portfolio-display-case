@@ -244,6 +244,29 @@ class TestGenerateTailoredCvDispatch:
         llm.assert_not_called()
 
 
+class TestDownloadFullCvDispatch:
+    @pytest.mark.asyncio
+    async def test_returns_download_token_no_claude_call(self):
+        ctx = _experience_http({"/experience": EXP, "/profile": PROFILE, "/skills": SKILLS})
+        with (
+            patch("app.tools.httpx.AsyncClient", return_value=ctx),
+            patch("app.tools.render_cv", return_value="/tmp/full_tok.docx"),
+            patch("app.tools._anthropic_client") as llm,
+        ):
+            result = await dispatch("download_full_cv", {}, client_ip="9.9.9.20")
+        assert result["download_token"] == "full_tok"
+        assert "error" not in result
+        llm.assert_not_called()  # full CV is deterministic, no tailoring call
+
+    @pytest.mark.asyncio
+    async def test_experience_api_down_returns_clean_error(self):
+        ctx = _experience_http({}, error=httpx.ConnectError("down"))
+        with patch("app.tools.httpx.AsyncClient", return_value=ctx):
+            result = await dispatch("download_full_cv", {}, client_ip="9.9.9.21")
+        assert "error" in result
+        assert "download_token" not in result
+
+
 class TestChatDownloadWiring:
     def test_download_url_populated_and_raw_token_not_fed_to_claude(self):
         tool_block = SimpleNamespace(

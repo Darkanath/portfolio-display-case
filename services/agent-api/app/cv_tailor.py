@@ -391,3 +391,55 @@ def tailor_cv(
     validate_tailored_cv(cv, source_roles)
     _apply_authoritative_fields(cv, source_roles, profile, contact, target_role)
     return cv
+
+
+def _flatten_skills(skills: Any) -> list[str]:
+    """experience-api groups skills by category; flatten to a single de-duplicated,
+    order-preserving list for the full-CV document."""
+    if isinstance(skills, dict):
+        flat = [s for group in skills.values() if isinstance(group, list) for s in group]
+    elif isinstance(skills, list):
+        flat = list(skills)
+    else:
+        return []
+    seen: set[str] = set()
+    return [s for s in flat if not (s in seen or seen.add(s))]
+
+
+def build_full_cv(
+    *,
+    source_roles: list[dict[str, Any]],
+    profile: dict[str, Any],
+    contact: dict[str, Any],
+    skills: Any = None,
+) -> TailoredCV:
+    """Build Tal's complete CV directly from source data — no Claude call, no
+    selection or tailoring. Every role and highlight is copied verbatim, so it is
+    inherently faithful and needs no gates. Rendered through the same template/token
+    pipeline as the tailored CV, so the generic 'download my CV' request delivers a
+    real .docx instead of a link to a static file. `target_role` is left empty so the
+    'Tailored for' line is omitted from the rendered document.
+    """
+    roles = [
+        TailoredRole(
+            id=r["id"],
+            title=r["title"],
+            company=r["company"],
+            date_range=_format_date_range(r.get("start"), r.get("end"), r.get("current", False)),
+            highlights=[
+                TailoredHighlight(text=h, source_id=r["id"]) for h in (r.get("highlights") or [])
+            ],
+            stack=r.get("stack") or [],
+        )
+        for r in source_roles
+    ]
+    return TailoredCV(
+        target_role="",
+        generated_summary=profile.get("summary", ""),
+        roles=roles,
+        skills=_flatten_skills(skills),
+        contact_email=contact.get("email", ""),
+        contact_linkedin=contact.get("linkedin", ""),
+        profile_name=profile.get("name", ""),
+        profile_tagline=profile.get("tagline", ""),
+    )

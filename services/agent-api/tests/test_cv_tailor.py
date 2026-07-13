@@ -21,9 +21,20 @@ from app.cv_tailor import (
     TailoredHighlight,
     TailoredRole,
     TailorError,
+    build_full_cv,
     tailor_cv,
     validate_tailored_cv,
 )
+
+# Source with `highlights` (build_full_cv copies those verbatim, ignoring achievements).
+FULL_SOURCE = [
+    {"id": "a", "title": "Architect", "company": "SmartLinx", "start": "2025-01",
+     "end": "2026-06", "current": False, "stack": ["C#", "Azure"],
+     "highlights": ["Did X for 10,000 users.", "Led a team of 11."]},
+    {"id": "b", "title": "Senior Dev", "company": "PRA Group", "start": "2011",
+     "end": "2024-12", "current": False, "stack": ["C++"],
+     "highlights": ["Cut cost from $2M to $17K."]},
+]
 
 # Four roles so the total-highlights cap (12) can be exceeded without exceeding
 # the per-role cap (4) — 4 roles x 4 = 16 > 12.
@@ -250,6 +261,46 @@ class TestTailorSystemPrompt:
 
     def test_requires_single_page(self):
         assert "one page" in TAILOR_SYSTEM_PROMPT.lower()
+
+
+class TestBuildFullCv:
+    def test_copies_all_roles_and_highlights_verbatim(self):
+        cv = build_full_cv(
+            source_roles=FULL_SOURCE, profile=PROFILE, contact=CONTACT,
+            skills={"languages": ["C#"], "cloud": ["Azure"]},
+        )
+        assert cv.target_role == ""  # no "Tailored for" line on the full CV
+        assert [r.id for r in cv.roles] == ["a", "b"]
+        for role, src in zip(cv.roles, FULL_SOURCE):
+            assert [h.text for h in role.highlights] == src["highlights"]
+            assert all(h.source_id == role.id for h in role.highlights)
+            assert role.stack == src["stack"]
+        assert cv.profile_name == PROFILE["name"]
+        assert cv.contact_email == CONTACT["email"]
+        assert cv.generated_summary == PROFILE["summary"]
+
+    def test_flattens_and_dedupes_grouped_skills(self):
+        cv = build_full_cv(
+            source_roles=FULL_SOURCE, profile=PROFILE, contact=CONTACT,
+            skills={"a": ["X", "Y"], "b": ["Y", "Z"]},
+        )
+        assert cv.skills == ["X", "Y", "Z"]
+
+    def test_accepts_list_or_missing_skills(self):
+        assert build_full_cv(
+            source_roles=FULL_SOURCE, profile=PROFILE, contact=CONTACT, skills=["P", "Q"]
+        ).skills == ["P", "Q"]
+        assert build_full_cv(
+            source_roles=FULL_SOURCE, profile=PROFILE, contact=CONTACT, skills=None
+        ).skills == []
+
+    def test_is_not_capped(self):
+        """The full CV is not subject to the tailored per-role/total caps."""
+        many = [{"id": "a", "title": "T", "company": "C", "start": "2020-01",
+                 "end": "2021-01", "current": False, "stack": [],
+                 "highlights": [f"point {i}" for i in range(9)]}]
+        cv = build_full_cv(source_roles=many, profile=PROFILE, contact=CONTACT)
+        assert len(cv.roles[0].highlights) == 9  # > MAX_HIGHLIGHTS_PER_ROLE
 
 
 def _mock_client(json_text: str) -> MagicMock:

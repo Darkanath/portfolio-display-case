@@ -17,7 +17,7 @@ import anthropic
 import httpx
 
 from app.cv_render import render_cv
-from app.cv_tailor import JOB_DESCRIPTION_MAX_CHARS, TailorError, tailor_cv
+from app.cv_tailor import JOB_DESCRIPTION_MAX_CHARS, TailorError, build_full_cv, tailor_cv
 
 EXPERIENCE_API_URL = os.environ.get("EXPERIENCE_API_URL", "http://experience-api:8080")
 PERSONA_API_URL = os.environ.get("PERSONA_API_URL", "http://persona-api:8080")
@@ -160,10 +160,12 @@ TOOLS: list[dict[str, Any]] = [
         "input_schema": {"type": "object", "properties": {}},
     },
     {
-        "name": "get_cv_download_link",
+        "name": "download_full_cv",
         "description": (
-            "Get a link to download Tal's CV as a PDF. Use this when the user asks for the CV, "
-            "resume, or wants a copy to keep."
+            "Generate a downloadable .docx of Tal's complete CV — all roles and highlights, "
+            "built from his real experience. Use this when the user asks for Tal's CV, resume, "
+            "or a copy to keep, without tailoring it to a specific role. For a role-specific "
+            "CV, use generate_tailored_cv instead."
         ),
         "input_schema": {"type": "object", "properties": {}},
     },
@@ -264,11 +266,25 @@ async def dispatch(
                 r.raise_for_status()
                 return r.json()
 
-            if tool_name == "get_cv_download_link":
+            if tool_name == "download_full_cv":
+                # Full CV, generated on the fly and delivered via the same download
+                # token as the tailored CV — no static file, no internal URL leak.
+                # No Claude call and no gates: build_full_cv copies source verbatim.
+                exp = await client.get(f"{EXPERIENCE_API_URL}/api/v1/experience")
+                exp.raise_for_status()
+                prof = await client.get(f"{EXPERIENCE_API_URL}/api/v1/profile")
+                prof.raise_for_status()
+                sk = await client.get(f"{EXPERIENCE_API_URL}/api/v1/skills")
+                sk.raise_for_status()
+                cv = build_full_cv(
+                    source_roles=exp.json(),
+                    profile=prof.json(),
+                    contact={"email": CONTACT_EMAIL, "linkedin": CONTACT_LINKEDIN},
+                    skills=sk.json(),
+                )
                 return {
-                    "url": f"{EXPERIENCE_API_URL}/api/v1/cv-pdf",
-                    "filename": "Tal_Shterzer_CV.pdf",
-                    "note": "Direct download link for the latest CV PDF.",
+                    "download_token": register_download(render_cv(cv)),
+                    "note": "Tal's full CV generated; a download link is attached to the reply.",
                 }
 
             if tool_name == "get_contact_info":

@@ -229,6 +229,6 @@ async def download_tailored_cv(request: Request, token: str) -> FileResponse:
     return FileResponse(
         path,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        filename="Tal_Shterzer_Tailored_CV.docx",
+        filename="Tal_Shterzer_CV.docx",  # serves both the tailored and full CV
         background=BackgroundTask(_safe_remove, path),
     )

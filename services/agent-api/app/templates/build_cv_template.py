@@ -24,9 +24,13 @@ def build() -> Path:
     doc = Document()
 
     # Header block — profile identity + who this copy was tailored for + contact.
+    # The "Tailored for" line is conditional: the tailored CV sets target_role, the
+    # full CV (build_full_cv) leaves it empty so the line is dropped entirely.
     doc.add_heading("{{ profile_name }}", level=0)
     doc.add_paragraph("{{ profile_tagline }}")
+    doc.add_paragraph("{%p if target_role %}")
     doc.add_paragraph("Tailored for: {{ target_role }}")
+    doc.add_paragraph("{%p endif %}")
     doc.add_paragraph("{{ contact_email }} | {{ contact_linkedin }}")
 
     doc.add_heading("Summary", level=1)
