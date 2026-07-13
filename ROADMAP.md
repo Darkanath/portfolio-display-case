@@ -130,15 +130,20 @@ working download link in the same panel.
 
 ## Milestone 7 — ship it
 
-- [ ] `uv add docxtpl` (or equivalent) in `agent-api`'s `pyproject.toml`
-- [ ] Full test suite green, `docker compose up` manual smoke test of the
-      whole flow end to end
-- [ ] Update `CLAUDE.md` if a new convention is worth codifying (per-tool
-      rate limiting pattern, `/tmp`-backed token store) — see the "flagged
-      for later pass" notes in `cv-tailoring.md`
-- [ ] Confirm root `README.md` needs no update (architecture shape is
-      unchanged — still 3 services, no new service)
-- [ ] Deploy via existing `agent-api.yml` / `experience-api.yml` CI
+- [x] `uv add docxtpl` (or equivalent) in `agent-api`'s `pyproject.toml`
+      (done in M4 — `docxtpl>=0.20.2`)
+- [x] Full test suite green (agent-api 85, web 47, experience-api 53,
+      persona-api 20 = 205), `docker compose up` end-to-end smoke of the whole
+      flow — tailored CV + full CV each return a working `download_url`, the
+      `.docx` downloads (200, single-use 404), slot-filling and plain chat work
+      (verified live this session while the stack was up)
+- [x] Update `CLAUDE.md` for the new conventions — per-tool in-memory rate
+      limiting + `/tmp`-backed single-use token store + agent-api `maxReplicas: 1`
+- [x] Root `README.md`: architecture shape unchanged (still 3 services), but the
+      cost row + `COSTS.md` updated for the Opus 4.8 tailor call
+- [ ] Deploy via existing per-service CI — **pending** (outward-facing; needs a
+      manual `terraform apply` for `maxReplicas: 1` since no workflow runs
+      terraform, then merge to `main`)
 
 **Acceptance:** the feature is live, documented in `CLAUDE.md` where it
 introduces a new convention, and the old roadmap's backlog (Milestone 1

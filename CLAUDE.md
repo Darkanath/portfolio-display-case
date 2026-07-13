@@ -53,6 +53,20 @@ Every service:
 - Has a `Dockerfile` that produces an image runnable as a non-root user
 - Has a `README.md` explaining what it does and how to run it locally
 
+### agent-api CV-tailoring — in-memory state & single replica
+
+The CV-tailoring feature keeps two **per-process, in-memory** stores in
+`agent-api`: a single-use, `/tmp`-backed download-token store (~10-minute TTL)
+and a per-tool sliding-window rate limiter. These are ephemeral process state,
+**not** a database, queue, or cache — they don't fall under the rule-5 approval
+gate — but they assume a single process. **agent-api must stay at
+`maxReplicas: 1`** (`infra/terraform/main.tf`); on more than one replica a token
+minted on one replica 404s on another and the per-IP counter can be bypassed.
+
+Per-tool in-memory rate limiting (a module-level dict in `tools.py`) is the
+accepted pattern for an expensive tool branch — distinct from, and independent
+of, the route-level `slowapi` limit on `/chat`.
+
 ## Frontend conventions
 
 - TypeScript strict mode, no `any` without justifying comment

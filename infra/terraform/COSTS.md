@@ -21,9 +21,15 @@ views per month). Cold-start is acceptable for this use case.
 
 - **Log Analytics workspace**: minimal at portfolio traffic, but not zero.
   Expect under $1/month. Acceptable for visibility.
-- **Anthropic API**: rate-limited to ~1000 chat requests/day globally. At Haiku
-  4.5 pricing ($1/M input, $5/M output), worst case ~$3.50/day if fully
-  saturated, realistic case under $2/month.
+- **Anthropic API**: two paths, both rate-limited.
+  - *Chat* (`/chat`) runs on Haiku 4.5 ($1/M input, $5/M output), rate-limited to
+    ~1000 requests/day globally — worst case ~$3.50/day if fully saturated,
+    realistic case under $2/month.
+  - *CV tailoring* (`generate_tailored_cv`) runs a second call on Opus 4.8
+    ($5/M input, $25/M output), capped at 3/hour per IP — roughly $0.05 per
+    tailored CV, so a handful per day is cents. The full-CV download
+    (`download_full_cv`) is generated deterministically with **no** model call.
+  - Combined, expected well under $5/month at portfolio traffic.
 
 ## Avoided on purpose
 
