@@ -17,18 +17,19 @@ import anthropic
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
+from starlette.background import BackgroundTask
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request as StarletteRequest
 
-from app.tools import TOOLS, dispatch
+from app.tools import TOOLS, claim_download, dispatch
 
 SERVICE_NAME = "agent-api"
-SERVICE_VERSION = "1.0.2"
+SERVICE_VERSION = "1.1.0"
 MODEL = "claude-haiku-4-5"
 MAX_TOKENS = 512
 MAX_TOOL_ITERATIONS = 6
@@ -105,6 +106,7 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
     tools_used: list[str]
+    download_url: str | None = None
 
 
 def _get_client() -> anthropic.Anthropic | None:
@@ -112,6 +114,17 @@ def _get_client() -> anthropic.Anthropic | None:
     if not key:
         return None
     return anthropic.Anthropic(api_key=key)
+
+
+def _download_url(token: str | None) -> str | None:
+    return f"/cv/tailored/{token}" if token else None
+
+
+def _safe_remove(path: str) -> None:
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
 
 
 @app.get("/health")
@@ -139,12 +152,14 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
             detail="Agent service is currently unavailable.",
         )
 
+    client_ip = get_remote_address(request)
     messages: list[dict[str, Any]] = [
         {"role": turn.role, "content": turn.content} for turn in body.history
     ]
     messages.append({"role": "user", "content": body.message})
 
     tools_used: list[str] = []
+    download_token: str | None = None
 
     for _ in range(MAX_TOOL_ITERATIONS):
         response = client.messages.create(
@@ -169,7 +184,14 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
                         "input": block.input,
                     })
                     tools_used.append(block.name)
-                    result = await dispatch(block.name, block.input)
+                    result = await dispatch(block.name, block.input, client_ip=client_ip)
+                    if isinstance(result, dict) and result.get("download_token"):
+                        # Thread the token into download_url ourselves rather than
+                        # relying on Claude to echo a URL in prose. Don't hand it the
+                        # raw token — the real link is attached to the response.
+                        download_token = result["download_token"]
+                        result = {k: v for k, v in result.items() if k != "download_token"}
+                        result["status"] = "CV generated; a download link is attached to this reply."
                     tool_results.append({
                         "type": "tool_result",
                         "tool_use_id": block.id,
@@ -186,9 +208,27 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
         ).strip()
         if not text:
             text = "(no response)"
-        return ChatResponse(reply=text, tools_used=tools_used)
+        return ChatResponse(
+            reply=text, tools_used=tools_used, download_url=_download_url(download_token)
+        )
 
     return ChatResponse(
         reply="I got stuck in a loop trying to answer that — could you rephrase?",
         tools_used=tools_used,
+        download_url=_download_url(download_token),
+    )
+
+
+@app.get("/cv/tailored/{token}")
+@limiter.limit("20/hour")
+async def download_tailored_cv(request: Request, token: str) -> FileResponse:
+    # Claim the token synchronously, before any await — atomic single-use.
+    path = claim_download(token)
+    if path is None:
+        raise HTTPException(status_code=404, detail="This download link is invalid or has expired.")
+    return FileResponse(
+        path,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        filename="Tal_Shterzer_CV.docx",  # serves both the tailored and full CV
+        background=BackgroundTask(_safe_remove, path),
     )

@@ -71,7 +71,7 @@ panel will just be disabled.
 | Cloudflare Pages | $0 |
 | Azure Container Apps (free grant: 180k vCPU-s, 360k GiB-s, 2M req/mo) | $0 at portfolio traffic |
 | GitHub Container Registry (public repo) | $0 |
-| Anthropic API (Haiku 4.5, rate-limited) | < $5/mo expected |
+| Anthropic API (Haiku 4.5 chat + Opus 4.8 tailored CVs, both rate-limited) | < $5/mo expected |
 | Custom domain | $0 (using free `.pages.dev` subdomain) |
 | **Total** | **< $5/mo** |
 

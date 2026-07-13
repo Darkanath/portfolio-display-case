@@ -192,10 +192,16 @@ class ChatResponse(BaseModel):
 
 `main.py` populates it directly from the tool result's `download_token`
 after the tool loop completes — **not** by parsing Claude's prose reply. This
-is a deliberate improvement over the existing `get_cv_download_link` tool,
-which today only reaches the visitor because Claude happens to echo a URL in
-prose and `ChatPanel.tsx`'s `ReactMarkdown` renders it as a link; that
-pattern is fragile (depends on Claude's phrasing) and is not reused here.
+is a deliberate improvement over the *old* `get_cv_download_link` tool, which
+only reached the visitor because Claude happened to echo a URL in prose and
+`ChatPanel.tsx`'s `ReactMarkdown` rendered it as a link — a fragile pattern
+(depends on Claude's phrasing) that also leaked the **internal**
+`http://experience-api:8080/api/v1/cv-pdf` URL, unreachable from the browser.
+That tool has since been replaced by `download_full_cv`, which renders Tal's
+complete CV (via `build_full_cv`, verbatim from source, no Claude call) through
+this same `download_token` mechanism — so both the tailored and the full-CV
+downloads deliver a real `.docx` and never expose an internal URL. (The static,
+Tal-designed PDF is still available on the page via `CvDownloadButton`.)
 
 Frontend change: `ChatPanel.tsx`/`MessageList` renders a conditional
 `<a href={`${API.agent}${download_url}`} download>` when the field is

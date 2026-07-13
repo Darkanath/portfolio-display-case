@@ -8,16 +8,94 @@ to anything else.
 from __future__ import annotations
 
 import os
+import time
+from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+import anthropic
 import httpx
+
+from app.cv_render import render_cv
+from app.cv_tailor import JOB_DESCRIPTION_MAX_CHARS, TailorError, build_full_cv, tailor_cv
 
 EXPERIENCE_API_URL = os.environ.get("EXPERIENCE_API_URL", "http://experience-api:8080")
 PERSONA_API_URL = os.environ.get("PERSONA_API_URL", "http://persona-api:8080")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "http://localhost:5173")
 
 TIMEOUT = httpx.Timeout(5.0, connect=3.0)
+
+CONTACT_EMAIL = "shterzer@gmail.com"
+CONTACT_LINKEDIN = "https://linkedin.com/in/talshterzer"
+
+# --- CV-tailoring: per-tool rate limit + download token store -----------------
+# Both are per-process, in-memory state (same category as slowapi's own limiter).
+# They assume a single process: agent-api must stay at maxReplicas: 1, or a token
+# minted on one replica 404s on another and the per-IP counter can be bypassed.
+# See docs/cv-tailoring.md § Single-instance constraint.
+
+# The tailoring tool is meaningfully more expensive than a chat turn (a second
+# Claude call + a docx render + extra experience-api round-trips), so it carries
+# its own tighter cap, independent of /chat's route-level slowapi limit. Sliding
+# window (per-IP timestamp list, pruned each check) avoids fixed-window doubling.
+TAILOR_RATE_LIMIT = int(os.environ.get("TAILOR_RATE_LIMIT", "3"))
+TAILOR_RATE_WINDOW_SECONDS = 3600
+_TAILOR_CALLS: dict[str, list[float]] = {}
+
+# Download tokens: token -> (path, expires_at). Single-use, lazy TTL; nothing is
+# persisted beyond the /tmp file and this dict entry.
+DOWNLOAD_TTL_SECONDS = int(os.environ.get("DOWNLOAD_TTL_SECONDS", "600"))
+_PENDING: dict[str, tuple[str, float]] = {}
+
+
+def _anthropic_client() -> anthropic.Anthropic | None:
+    """A fresh Anthropic client for the tailor call (own creation, not imported
+    from main.py — importing main here would be circular)."""
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    return anthropic.Anthropic(api_key=key) if key else None
+
+
+def _tailor_rate_ok(client_ip: str | None) -> bool:
+    """Record this call and return False if the IP is over TAILOR_RATE_LIMIT within
+    the trailing window. Bounds frequency of the expensive branch, not per-request
+    scope (gate 4 handles scope)."""
+    now = time.time()
+    key = client_ip or "unknown"
+    recent = [t for t in _TAILOR_CALLS.get(key, []) if now - t < TAILOR_RATE_WINDOW_SECONDS]
+    if len(recent) >= TAILOR_RATE_LIMIT:
+        _TAILOR_CALLS[key] = recent
+        return False
+    recent.append(now)
+    _TAILOR_CALLS[key] = recent
+    return True
+
+
+def register_download(path: str) -> str:
+    """Store a rendered file under its filename-stem token and return the token."""
+    token = Path(path).stem
+    _PENDING[token] = (path, time.time() + DOWNLOAD_TTL_SECONDS)
+    return token
+
+
+def claim_download(token: str) -> str | None:
+    """Atomically claim a token: pop it, return its path if still valid, else None.
+
+    Popping synchronously (`dict.pop` is atomic in CPython) before the caller awaits
+    anything is what makes the download single-use under near-simultaneous requests —
+    deferring the pop to a post-response cleanup would leave a race window. An expired
+    entry is dropped and its file removed on this touch (lazy TTL, no background sweep).
+    """
+    entry = _PENDING.pop(token, None)
+    if entry is None:
+        return None
+    path, expires_at = entry
+    if time.time() > expires_at:
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+        return None
+    return path
 
 
 TOOLS: list[dict[str, Any]] = [
@@ -82,10 +160,12 @@ TOOLS: list[dict[str, Any]] = [
         "input_schema": {"type": "object", "properties": {}},
     },
     {
-        "name": "get_cv_download_link",
+        "name": "download_full_cv",
         "description": (
-            "Get a link to download Tal's CV as a PDF. Use this when the user asks for the CV, "
-            "resume, or wants a copy to keep."
+            "Generate a downloadable .docx of Tal's complete CV — all roles and highlights, "
+            "built from his real experience. Use this when the user asks for Tal's CV, resume, "
+            "or a copy to keep, without tailoring it to a specific role. For a role-specific "
+            "CV, use generate_tailored_cv instead."
         ),
         "input_schema": {"type": "object", "properties": {}},
     },
@@ -97,14 +177,47 @@ TOOLS: list[dict[str, Any]] = [
         ),
         "input_schema": {"type": "object", "properties": {}},
     },
+    {
+        "name": "generate_tailored_cv",
+        "description": (
+            "Generate a downloadable .docx CV tailored to a specific target role, built only "
+            "from Tal's real experience (never invented). Use this when the user asks for a CV "
+            "or resume tailored, customized, or targeted to a role or job posting. Both "
+            "target_role and job_description are required — pass an empty string for "
+            "job_description if the user did not provide one. If the target role is unclear, "
+            "ask for it in prose instead of calling this tool."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "target_role": {
+                    "type": "string",
+                    "description": "The role or title to tailor the CV for, e.g. 'Staff Engineer'.",
+                },
+                "job_description": {
+                    "type": "string",
+                    "maxLength": JOB_DESCRIPTION_MAX_CHARS,
+                    "description": (
+                        "The job description to tailor against, or an empty string if none "
+                        "was provided. Treated as untrusted data by the tailor step."
+                    ),
+                },
+            },
+            "required": ["target_role", "job_description"],
+        },
+    },
 ]
 
 
-async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]:
+async def dispatch(
+    tool_name: str, tool_input: dict[str, Any], client_ip: str | None = None
+) -> dict[str, Any]:
     """Execute one tool call and return its result.
 
     Errors are returned as data, not raised — the LLM should see what failed and
-    react sensibly rather than the chat blowing up.
+    react sensibly rather than the chat blowing up. `client_ip` is optional and only
+    used by the rate-limited `generate_tailored_cv` branch, so every other call site
+    and its tests are unaffected.
     """
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
         try:
@@ -153,18 +266,76 @@ async def dispatch(tool_name: str, tool_input: dict[str, Any]) -> dict[str, Any]
                 r.raise_for_status()
                 return r.json()
 
-            if tool_name == "get_cv_download_link":
+            if tool_name == "download_full_cv":
+                # Full CV, generated on the fly and delivered via the same download
+                # token as the tailored CV — no static file, no internal URL leak.
+                # No Claude call and no gates: build_full_cv copies source verbatim.
+                exp = await client.get(f"{EXPERIENCE_API_URL}/api/v1/experience")
+                exp.raise_for_status()
+                prof = await client.get(f"{EXPERIENCE_API_URL}/api/v1/profile")
+                prof.raise_for_status()
+                sk = await client.get(f"{EXPERIENCE_API_URL}/api/v1/skills")
+                sk.raise_for_status()
+                cv = build_full_cv(
+                    source_roles=exp.json(),
+                    profile=prof.json(),
+                    contact={"email": CONTACT_EMAIL, "linkedin": CONTACT_LINKEDIN},
+                    skills=sk.json(),
+                )
                 return {
-                    "url": f"{EXPERIENCE_API_URL}/api/v1/cv-pdf",
-                    "filename": "Tal_Shterzer_CV.pdf",
-                    "note": "Direct download link for the latest CV PDF.",
+                    "download_token": register_download(render_cv(cv)),
+                    "note": "Tal's full CV generated; a download link is attached to the reply.",
                 }
 
             if tool_name == "get_contact_info":
                 return {
-                    "email": "shterzer@gmail.com",
-                    "linkedin": "https://linkedin.com/in/talshterzer",
+                    "email": CONTACT_EMAIL,
+                    "linkedin": CONTACT_LINKEDIN,
                     "note": "Prefer LinkedIn for first contact unless email is more convenient.",
+                }
+
+            if tool_name == "generate_tailored_cv":
+                target_role = (tool_input.get("target_role") or "").strip()
+                if not target_role:
+                    return {"error": "A target role is required to tailor a CV."}
+                # Rate-limit only genuine attempts: a malformed request above never
+                # reaches Claude, so it must not burn one of the caller's slots.
+                if not _tailor_rate_ok(client_ip):
+                    return {
+                        "error": "Tailored-CV generation is rate limited (a few per hour). "
+                        "Please try again later."
+                    }
+                job_description = tool_input.get("job_description") or ""
+
+                # Full experience payload (with achievements) + profile + skills.
+                # An outage here raises httpx.HTTPError -> caught below as a clean error.
+                exp = await client.get(f"{EXPERIENCE_API_URL}/api/v1/experience")
+                exp.raise_for_status()
+                prof = await client.get(f"{EXPERIENCE_API_URL}/api/v1/profile")
+                prof.raise_for_status()
+                sk = await client.get(f"{EXPERIENCE_API_URL}/api/v1/skills")
+                sk.raise_for_status()
+
+                llm = _anthropic_client()
+                if llm is None:
+                    return {"error": "Tailored-CV generation is unavailable right now."}
+                try:
+                    tailored = tailor_cv(
+                        llm,
+                        target_role=target_role,
+                        job_description=job_description,
+                        source_roles=exp.json(),
+                        profile=prof.json(),
+                        contact={"email": CONTACT_EMAIL, "linkedin": CONTACT_LINKEDIN},
+                        skills=sk.json(),
+                    )
+                    path = render_cv(tailored)
+                except TailorError as exc:
+                    return {"error": f"Could not generate a tailored CV: {exc}"}
+                return {
+                    "download_token": register_download(path),
+                    "target_role": target_role,
+                    "note": "Tailored CV generated; a download link is attached to the reply.",
                 }
 
             return {"error": f"Unknown tool: {tool_name}"}
