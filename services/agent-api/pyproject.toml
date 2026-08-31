@@ -9,7 +9,7 @@ dependencies = [
     "anthropic>=0.116.0",
     "httpx>=0.28",
     "slowapi>=0.1.10",
-    "pydantic>=2.9",
+    "pydantic>=2.13.5",
 ]
 
 [dependency-groups]
